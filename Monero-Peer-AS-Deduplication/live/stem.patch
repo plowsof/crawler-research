@@ -1,0 +1,116 @@
+diff --git a/src/cryptonote_protocol/levin_notify.cpp b/src/cryptonote_protocol/levin_notify.cpp
+index 387bcd1c3..429c41771 100644
+--- a/src/cryptonote_protocol/levin_notify.cpp
++++ b/src/cryptonote_protocol/levin_notify.cpp
+@@ -28,6 +28,10 @@
+ 
+ #include "levin_notify.h"
+ 
++#include <algorithm>
++#include <array>
++#include <cstdlib>
++#include <cstring>
+ #include <boost/asio/dispatch.hpp>
+ #include <boost/asio/post.hpp>
+ #include <boost/asio/steady_timer.hpp>
+@@ -48,6 +52,8 @@
+ #include "cryptonote_basic/connection_context.h"
+ #include "cryptonote_core/i_core_events.h"
+ #include "cryptonote_protocol/cryptonote_protocol_defs.h"
++#include "asmap/asmap_data.h"
++#include "net/asmap.h"
+ #include "net/dandelionpp.h"
+ #include "p2p/net_node.h"
+ 
+@@ -137,25 +143,68 @@ namespace levin
+       return std::max(local_blockchain_height, get_median_remote_height(p2p));
+     }
+ 
++    //! Experimental: when set, Dandelion++ stems are drawn uniformly over the ASes of the outbound connections
++    bool stem_by_asn()
++    {
++      static const bool enabled = std::getenv("MONERO_DANDELIONPP_STEM_ASN") != nullptr;
++      return enabled;
++    }
++
++    //! \return Stem group of `address`: its AS from the embedded asmap, else its /24 (IPv4 only)
++    boost::optional<std::uint64_t> stem_group(const epee::net_utils::network_address& address)
++    {
++      if (address.get_type_id() != epee::net_utils::ipv4_network_address::get_type_id())
++        return boost::none;
++      const auto& ipv4 = address.as<const epee::net_utils::ipv4_network_address>();
++      if (ipv4.is_loopback() || ipv4.is_local())
++        return boost::none;
++      const std::uint32_t ip = ipv4.ip();
++      std::array<std::uint8_t, 16> mapped{{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xff}};
++      std::memcpy(mapped.data() + 12, &ip, sizeof(ip));
++      const std::uint32_t asn = net::asmap::Interpret(asmap_data::GetEmbeddedAsmap(), epee::to_span(mapped));
++      if (asn != 0)
++        return (std::uint64_t{1} << 32) | asn;
++      return std::uint64_t{ip & ntohl(0xffffff00)};
++    }
++
+     //! \return Outgoing connections supporting fragments in `connections` filtered by blockchain height.
+     std::vector<boost::uuids::uuid> get_out_connections(connections& p2p, uint64_t blockchain_height)
+     {
+-      std::vector<boost::uuids::uuid> outs;
+-      outs.reserve(connection_id_reserve_size);
++      std::vector<std::pair<boost::uuids::uuid, boost::optional<std::uint64_t>>> candidates;
++      candidates.reserve(connection_id_reserve_size);
++      const bool by_asn = stem_by_asn();
+ 
+       /* The foreach call is serialized with a lock, but should be quick due to
+          the reserve call so a strand is not used. Investigate if there is lots
+          of waiting in here. */
+ 
+-      p2p.foreach_connection([&outs, blockchain_height] (detail::p2p_context& context) {
++      p2p.foreach_connection([&candidates, blockchain_height, by_asn] (detail::p2p_context& context) {
+         // Give a +2 allowable window for candidate peers, since we may not have updated the peer's
+         // known sync height yet (e.g. if we haven't received or finished processing their new block(s) yet)
+         if (!context.m_is_income && (context.m_remote_blockchain_height + 2) >= blockchain_height)
+-          outs.emplace_back(context.m_connection_id);
++          candidates.emplace_back(context.m_connection_id, by_asn ? stem_group(context.m_remote_address) : boost::none);
+         return true;
+       });
+ 
+-      MDEBUG("Found " << outs.size() << " out connections having height >= " << blockchain_height);
++      // keep one random connection per group, so that `connection_map` draws stems uniformly over groups
++      if (by_asn)
++        std::shuffle(candidates.begin(), candidates.end(), crypto::random_device{});
++      std::vector<boost::uuids::uuid> outs;
++      outs.reserve(candidates.size());
++      std::vector<std::uint64_t> seen;
++      for (const auto& candidate : candidates)
++      {
++        if (candidate.second)
++        {
++          if (std::find(seen.begin(), seen.end(), *candidate.second) != seen.end())
++            continue;
++          seen.push_back(*candidate.second);
++        }
++        outs.push_back(candidate.first);
++      }
++
++      MDEBUG("Found " << outs.size() << " out connections having height >= " << blockchain_height
++        << (by_asn ? " (one per AS)" : ""));
+       return outs;
+     }
+ 
+@@ -513,6 +562,17 @@ namespace levin
+ 
+         zone->connection_count = zone->map.size();
+ 
++        if (zone->nzone == epee::net_utils::zone::public_ && ELPP->vRegistry()->allowed(el::Level::Info, "net.dandelionpp.stems"))
++        {
++          std::string stems;
++          zone->p2p->foreach_connection([&zone, &stems] (detail::p2p_context& context) {
++            if (std::find(zone->map.begin(), zone->map.end(), context.m_connection_id) != zone->map.end())
++              stems += context.m_remote_address.host_str() + " ";
++            return true;
++          });
++          MCINFO("net.dandelionpp.stems", (zone->fluffing ? "fluff" : "stem") << " epoch, by_asn=" << stem_by_asn() << ", stems: " << stems);
++        }
++
+         // only noise uses the "noise channels", only update when enabled
+         if (zone->noise.empty())
+           return;

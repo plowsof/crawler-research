@@ -1,0 +1,19 @@
+\begin{table}[H]
+\caption{
+{\fontsize{20}{25}\selectfont  Measurements in this note and in published work\small } \\ 
+{\fontsize{14}{17}\selectfont  Denominators and classifications differ between studies; see the text\small }
+} 
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}p{0.27\linewidth}p{0.31\linewidth}p{0.31\linewidth}}
+\toprule
+Quantity & This note & Published \\ 
+\midrule\addlinespace[2.5pt]
+Simulation, May 2025 data, /24 deduplication & \simOldSubnetEightyMean{} of 12 outbound connections to ban-listed nodes & 1.06 of 12 (8.8\%) \cite{Rucknium2025} \\ 
+Non-standard nodes & \nSpyNew{} of \nReachNew{} reachable IPv4 nodes, Oct 2026 & 1,877 of 13,050 connected IPs (14.38\%), Jun 2025 \cite{Kopyciok2026} \\ 
+Largest entity & \spyTopAsnNNew{} nodes in AS\spyTopAsnNew{} & 1,582 peers in AS54098 \cite{Kopyciok2026}; \spyTopAsnNOld{} of \nSpyOld{} ban-listed nodes in AS54098, May 2025 \cite{xmrpeers} \\ 
+Fleet share of peer-list entries & \plListSpy\% (real peer lists) & 16.22\% for AS54098 \cite{Kopyciok2026} \\ 
+Default node's outbound connections to the fleet & \abCtrlPct\% live; \plStemCurObs\% real-list simulation; \simNewSubnetEightyPct\% uniform model & 6.69\% (AS54098) and 7.78\% (all anomalous), measured \cite{Kopyciok2026}; 30.8\% before and 8.8\% after /24 deduplication, modelled \cite{Rucknium2025} \\ 
+Addresses available to the fleet & \nSpyNew{} IPv4 addresses in \spyTwentyFourNew{} /24 and \spySixteenNew{} /16 subnets & eclipse attack evaluated with 1,020 addresses \cite{Shi2025} \\ 
+\bottomrule
+\end{tabular*}
+\label{table-comparison}
+\end{table}

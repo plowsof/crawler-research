@@ -1,0 +1,72 @@
+{
+ "asmap": {
+  "snapshots": 1227,
+  "instances": 12,
+  "boxes": [
+   "node1",
+   "node2",
+   "oracle",
+   "ovhde"
+  ],
+  "mean_out": 12.01,
+  "spy_share_pct": 2.7,
+  "spy_of_12": 0.32,
+  "distinct_asns": 12.0,
+  "stem_cur_pct": 2.7,
+  "stem_div_pct": 2.7,
+  "unknown_pct": 16.4,
+  "per_instance_spy_pct": {
+   "node1/0": 0.0,
+   "node1/2": 0.1,
+   "node1/4": 0.0,
+   "node2/0": 8.4,
+   "node2/2": 8.3,
+   "node2/4": 0.1,
+   "oracle/0": 0.1,
+   "oracle/2": 0.2,
+   "oracle/4": 0.1,
+   "ovhde/0": 8.3,
+   "ovhde/2": 6.2,
+   "ovhde/4": 0.0
+  },
+  "distinct_peers_min": 12,
+  "distinct_peers_max": 18
+ },
+ "control": {
+  "snapshots": 1227,
+  "instances": 12,
+  "boxes": [
+   "node1",
+   "node2",
+   "oracle",
+   "ovhde"
+  ],
+  "mean_out": 12.01,
+  "spy_share_pct": 33.77,
+  "spy_of_12": 4.05,
+  "distinct_asns": 7.05,
+  "stem_cur_pct": 33.77,
+  "stem_div_pct": 13.77,
+  "unknown_pct": 14.9,
+  "per_instance_spy_pct": {
+   "node1/1": 16.6,
+   "node1/3": 49.3,
+   "node1/5": 58.4,
+   "node2/1": 33.3,
+   "node2/3": 16.7,
+   "node2/5": 16.8,
+   "oracle/1": 24.9,
+   "oracle/3": 50.2,
+   "oracle/5": 23.9,
+   "ovhde/1": 25.1,
+   "ovhde/3": 40.0,
+   "ovhde/5": 49.1
+  },
+  "distinct_peers_min": 13,
+  "distinct_peers_max": 17
+ },
+ "rank_test_p": 3.698011505253395e-07,
+ "rank_u": 144.0,
+ "rank_u_max": 144,
+ "hours": 8.95
+}

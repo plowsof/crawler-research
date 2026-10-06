@@ -1,0 +1,16 @@
+size,share,what
+Alone in its AS,13.271375464684,Honest reachable nodes
+AS with 2-9 honest nodes,24.0148698884758,Honest reachable nodes
+AS with 10+ honest nodes,62.7137546468402,Honest reachable nodes
+Alone in its AS,18.2355136382141,"Inbound connections, /24 dedup (master)"
+AS with 2-9 honest nodes,31.1477133939476,"Inbound connections, /24 dedup (master)"
+AS with 10+ honest nodes,50.6167729678383,"Inbound connections, /24 dedup (master)"
+Alone in its AS,62.3471027403999,"Inbound connections, AS dedup (--asmap)"
+AS with 2-9 honest nodes,33.8185236601336,"Inbound connections, AS dedup (--asmap)"
+AS with 10+ honest nodes,3.83437359946657,"Inbound connections, AS dedup (--asmap)"
+AS with 10+ honest nodes,53.3,"Live peers, default"
+AS with 2-9 honest nodes,35.9,"Live peers, default"
+Alone in its AS,10.9,"Live peers, default"
+AS with 2-9 honest nodes,41.7,"Live peers, --asmap"
+AS with 10+ honest nodes,12.9,"Live peers, --asmap"
+Alone in its AS,45.5,"Live peers, --asmap"

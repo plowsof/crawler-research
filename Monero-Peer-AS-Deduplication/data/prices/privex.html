@@ -1,0 +1,576 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Privex | Secure Private VPS and Dedicated Server hosting</title>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="hosting,dedicated server,virtual server,vps,hive,hbd,litecoin,bitcoin,monero,xmr,dogecoin,doge,peakd,private,
+                                   privacy,anonymous,secret,secure,safe,preevex,pryvex,preevy" />
+    
+        
+            <meta name="description" content="We are a server host that cares about your privacy. Easy sign-up, and we accept cryptocurrency such as Litecoin, Monero, Dogecoin, Hive, and Bitcoin for our services."/>
+        
+            <meta name="og:description" content="We are a server host that cares about your privacy. Easy sign-up, and we accept cryptocurrency such as Litecoin, Monero, Dogecoin, Hive, and Bitcoin for our services."/>
+        
+            <meta name="og:image" content="https://www.privex.io/static/assets/img/logo-withtext.png"/>
+        
+            <meta name="twitter:card" content="summary_large_image"/>
+        
+            <meta name="twitter:site" content="@PrivexInc"/>
+        
+            <meta name="og:title" content="Privex | Secure Private VPS and Dedicated Server hosting"/>
+        
+    
+    <link rel="icon" href="/static/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/assets/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/assets/img/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/assets/img/apple-touch-icon.png">
+    <meta name="og:site_name" content="Privex"/>
+    <meta name="theme-color" content="#ea5756"/>
+    
+    <!-- Material Design fonts -->
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" type="text/css" href="https://cdn.privex.io/lib/reset/v2.0/reset.css"
+          integrity="sha384-wesQJyO/4NbaiR70v7ZXoKpbvjLO2t4odKr/c0qp8wjqrlQyaArxbQRXXk0xeIqq" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="/static/assets/css/style.css?1791228348">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="https://cdn.privex.io/lib/fontawesome/5.15.1/css/all.min.css"
+          integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.privex.io/lib/forkawesome/1.1.7/css/fork-awesome.min.css"
+          integrity="sha384-mByhW6NjnxyShh67P9+fepUvYSd7Uz/qV6e2u4kA2Fi4ZkjXxIP2mRkyK9dwK24W" crossorigin="anonymous"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.privex.io/lib/notie/4.3.1/notie.min.css"
+          integrity="sha384-Jv3WSys2uSFeLomz0Yj7cvY3du+3jFXWOn97+UCbEUTTTQX8ljqok72pu03WznpC" crossorigin="anonymous"/>
+    <style type="text/css">
+        .notie-container {
+            z-index: 50 !important;
+        }
+    </style>
+    
+
+    
+        <script src="/static/assets/js/frontend.min.js" defer></script>
+    
+    <!-- TrustBox script -->
+    <script type="text/javascript" src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" defer></script>
+    <!-- End TrustBox script -->
+    
+    
+</head>
+<body id="page-frontpage" class="site-body site-body--">
+
+
+
+<header class="header" id="page-header">
+
+    <div class="header__container">
+        <a class="site-logo site-logo--header" href="/">
+
+            <img src="https://cdn.privex.io/privex.io/svg/privex_logo_spaced_horizontal.svg"
+                 alt="Privex Logo" />
+        </a>
+        <ul class="nav-list nav-list--main">
+            <li class="nav-list__item below-400">
+                <i class="fa fa-phone"></i> <a class="nav-list__link" href="tel:+18777180801">+1 877-718-0801</a>
+            </li>
+            <li class="nav-list__item"><a class="nav-list__link" href="/about/">About Us</a></li>
+            <li class="nav-list__item"><a class="nav-list__link" href="/articles/">Articles</a></li>
+            <li class="nav-list__item"><a class="nav-list__link" href="/contact/">Contact</a></li>
+            <li class="nav-list__item"><a class="nav-list__link" href="/privacy/">Privacy</a></li>
+            <li class="nav-list__item"><a class="nav-list__link" href="/dashboard/">Customer Panel</a></li>
+        </ul>
+        <ul class="nav-list nav-list--client">
+            <li class="nav-list__item above-400">
+                <i class="fa fa-phone"></i> <a class="nav-list__link" href="tel:+14047774839">+1-404S-PRIVEX</a>
+            </li>
+            <!-- <li class="nav-list__item">
+                <a href="/login" class="nav-list__link nav-list__link--btn-light">Sign In</a>
+            </li> -->
+            <li class="nav-list__item nav-list__item--burger burger-btn__wrapper">
+                <a href="javascript:void(0)" class="burger-btn" id="burger-btn">
+                    <div class="burger-btn__bar"></div>
+                    <div class="burger-btn__bar"></div>
+                    <div class="burger-btn__bar"></div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</header>
+<script>
+    (function() {
+        const burgerBtn = document.getElementById('burger-btn')
+        const body = document.getElementsByTagName('body')[0]
+        burgerBtn.addEventListener('click', (event) => {
+            burgerBtn.classList.toggle('open')
+            body.classList.toggle('open')
+        })
+
+        const closeMobileNav = () => {
+            burgerBtn.classList.remove('open')  
+            body.classList.remove('open')
+        }
+
+        let timeout
+        window.addEventListener('resize', () => {
+            clearTimeout(timeout)
+            if (window.outerWidth > 870) {
+                timeout = setTimeout(closeMobileNav, 300)
+            }
+        })
+
+        window.addEventListener('keydown', (event) => {
+            if((event.key !== "Escape" && event.code !== "Escape") || !body.classList.contains('open')) {
+                return;
+            }
+            burgerBtn.classList.remove('open')  
+            body.classList.remove('open')
+        })
+    })()
+</script>
+
+<div class="site-content">
+    
+
+
+<div class="hero">
+    <div class="hero__info">
+        <img src="/static/assets/img/hero-title.png" class="hero__title" alt="">
+        <p class="hero__copy">
+            PrivacyRegion Dedicated & Virtual Servers.<br>
+            Starting at just $0.99/month.
+        </p>
+        <div>
+            <a href="https://pay.privex.io/order/?ref=home" target="_blank" class="hero__cta">Get Started</a>
+        </div>
+    </div>
+    <img src="/static/assets/img/hero-art.png" class="hero__art">
+</div>
+
+
+<!-- TrustBox widget - Micro Review Count -->
+<div class="trustpilot-widget" data-locale="en-US" data-template-id="5419b6a8b0d04a076446a9ad" data-businessunit-id="5a059dc60000ff0005b01309" data-style-height="24px" data-style-width="100%" data-theme="dark" data-token="6abb1615-bdaf-4262-9f8f-25e617218f39" data-min-review-count="10" data-style-alignment="center">
+  <a href="https://www.trustpilot.com/review/www.privex.io" target="_blank" rel="noopener">Trustpilot</a>
+</div>
+<!-- End TrustBox widget -->
+
+<div class="promo promo--sweden">
+    <h2 class="promo__title">
+        Now Available in <span class="promo__highlight">Sweden</span>
+    </h2>
+    <p class="promo__copy">
+        Our new Data Center in Stockholm,<br class="promo__copy-break"> from just $0.99/month
+    </p>
+    <p class="promo__subtitle">
+        <!-- 15% off your first <span class="promo__highlight">Swedish</span> order. -->
+    </p>
+    <p class="promo__offer-ends">
+        <!-- Offer ends December 31. -->
+    </p>
+</div>
+
+<h2 class="product-panel-title">
+  Some of our most popular options (<a href="https://pay.privex.io/order/">View ALL</a>)
+</h2>
+
+<!-- Sales Boxes! A little Python (hssss) -->
+<section class="sale-boxes">
+    
+    <article class="sale-box">
+        <header class="sale-box__header">
+            <h3 class="sale-box__title">V1</h3>
+            <h4 class="sale-box__subtitle">germany</h4>
+            <div class="sale-box__flag sale-box__flag--germany">
+                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 182.28 62.99"><title>sale-box-flag-curve</title><path d="M182.3,63C173.79,63,66.77,62.9,0,63V0C27.92,0,45.54,0,62.47,0,109.58,11.5,119.83,56.58,182.3,63Z" transform="translate(-0.02 0.01)" style="fill:#fff;fill-rule:evenodd"/></svg>
+            </div>
+        </header>
+        <div class="sale-box-payment">
+            <span class="sale-box-payment__price">
+                $8
+            </span>
+            <span class="sale-box-payment__price sale-box-payment__price--cents">
+                00
+            </span>
+            <span class="sale-box-payment__frequency">
+                Per<br>Month
+            </span>
+        </div>
+        <ul class="sale-box-list">
+            
+            <li class="sale-box-list__item">1GB RAM</li>
+            <li class="sale-box-list__item">50GB HDD</li>
+            <li class="sale-box-list__item">2 Cores</li>
+            
+            <li class="sale-box-list__item">2TB Bandwidth</li>
+        </ul>
+        
+    </article>
+    
+    <article class="sale-box">
+        <header class="sale-box__header">
+            <h3 class="sale-box__title">V8</h3>
+            <h4 class="sale-box__subtitle">germany</h4>
+            <div class="sale-box__flag sale-box__flag--germany">
+                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 182.28 62.99"><title>sale-box-flag-curve</title><path d="M182.3,63C173.79,63,66.77,62.9,0,63V0C27.92,0,45.54,0,62.47,0,109.58,11.5,119.83,56.58,182.3,63Z" transform="translate(-0.02 0.01)" style="fill:#fff;fill-rule:evenodd"/></svg>
+            </div>
+        </header>
+        <div class="sale-box-payment">
+            <span class="sale-box-payment__price">
+                $40
+            </span>
+            <span class="sale-box-payment__price sale-box-payment__price--cents">
+                00
+            </span>
+            <span class="sale-box-payment__frequency">
+                Per<br>Month
+            </span>
+        </div>
+        <ul class="sale-box-list">
+            
+            <li class="sale-box-list__item">8GB RAM</li>
+            <li class="sale-box-list__item">200GB HDD</li>
+            <li class="sale-box-list__item">4 Cores</li>
+            
+            <li class="sale-box-list__item">2TB Bandwidth</li>
+        </ul>
+        
+    </article>
+    
+    <article class="sale-box">
+        <header class="sale-box__header">
+            <h3 class="sale-box__title">V8</h3>
+            <h4 class="sale-box__subtitle">USA</h4>
+            <div class="sale-box__flag sale-box__flag--USA">
+                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 182.28 62.99"><title>sale-box-flag-curve</title><path d="M182.3,63C173.79,63,66.77,62.9,0,63V0C27.92,0,45.54,0,62.47,0,109.58,11.5,119.83,56.58,182.3,63Z" transform="translate(-0.02 0.01)" style="fill:#fff;fill-rule:evenodd"/></svg>
+            </div>
+        </header>
+        <div class="sale-box-payment">
+            <span class="sale-box-payment__price">
+                $50
+            </span>
+            <span class="sale-box-payment__price sale-box-payment__price--cents">
+                00
+            </span>
+            <span class="sale-box-payment__frequency">
+                Per<br>Month
+            </span>
+        </div>
+        <ul class="sale-box-list">
+            
+            <li class="sale-box-list__item">8GB RAM</li>
+            <li class="sale-box-list__item">100GB HDD</li>
+            <li class="sale-box-list__item">4 Cores</li>
+            
+            <li class="sale-box-list__item">2TB Bandwidth</li>
+        </ul>
+        
+    </article>
+    
+    <article class="sale-box">
+        <header class="sale-box__header">
+            <h3 class="sale-box__title">DX64-SSD</h3>
+            <h4 class="sale-box__subtitle">USA</h4>
+            <div class="sale-box__flag sale-box__flag--USA">
+                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 182.28 62.99"><title>sale-box-flag-curve</title><path d="M182.3,63C173.79,63,66.77,62.9,0,63V0C27.92,0,45.54,0,62.47,0,109.58,11.5,119.83,56.58,182.3,63Z" transform="translate(-0.02 0.01)" style="fill:#fff;fill-rule:evenodd"/></svg>
+            </div>
+        </header>
+        <div class="sale-box-payment">
+            <span class="sale-box-payment__price">
+                $210
+            </span>
+            <span class="sale-box-payment__price sale-box-payment__price--cents">
+                00
+            </span>
+            <span class="sale-box-payment__frequency">
+                Per<br>Month
+            </span>
+        </div>
+        <ul class="sale-box-list">
+             
+            <li class="sale-box-list__item sale-box-list__item--fee">$50.00 Setup Fee</li>
+            
+            <li class="sale-box-list__item">64GB DDR4 ECC RAM</li>
+            <li class="sale-box-list__item">2x240GB SSD</li>
+            <li class="sale-box-list__item">Xeon E3 (4c/8t)</li>
+            
+            <li class="sale-box-list__item">10TB Bandwidth</li>
+        </ul>
+        
+    </article>
+    
+    <article class="sale-box">
+        <header class="sale-box__header">
+            <h3 class="sale-box__title">DX256-SSD</h3>
+            <h4 class="sale-box__subtitle">germany</h4>
+            <div class="sale-box__flag sale-box__flag--germany">
+                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 182.28 62.99"><title>sale-box-flag-curve</title><path d="M182.3,63C173.79,63,66.77,62.9,0,63V0C27.92,0,45.54,0,62.47,0,109.58,11.5,119.83,56.58,182.3,63Z" transform="translate(-0.02 0.01)" style="fill:#fff;fill-rule:evenodd"/></svg>
+            </div>
+        </header>
+        <div class="sale-box-payment">
+            <span class="sale-box-payment__price">
+                $240
+            </span>
+            <span class="sale-box-payment__price sale-box-payment__price--cents">
+                00
+            </span>
+            <span class="sale-box-payment__frequency">
+                Per<br>Month
+            </span>
+        </div>
+        <ul class="sale-box-list">
+             
+            <li class="sale-box-list__item sale-box-list__item--fee">$200.00 Setup Fee</li>
+            
+            <li class="sale-box-list__item">256GB DDR4 ECC RAM</li>
+            <li class="sale-box-list__item">2x480GB SSD</li>
+            <li class="sale-box-list__item">Xeon E5 (6c/12t)</li>
+            
+            <li class="sale-box-list__item">50TB Bandwidth</li>
+        </ul>
+        
+    </article>
+    
+    <article class="sale-box">
+        <header class="sale-box__header">
+            <h3 class="sale-box__title">DX512-SSD</h3>
+            <h4 class="sale-box__subtitle">germany</h4>
+            <div class="sale-box__flag sale-box__flag--germany">
+                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 182.28 62.99"><title>sale-box-flag-curve</title><path d="M182.3,63C173.79,63,66.77,62.9,0,63V0C27.92,0,45.54,0,62.47,0,109.58,11.5,119.83,56.58,182.3,63Z" transform="translate(-0.02 0.01)" style="fill:#fff;fill-rule:evenodd"/></svg>
+            </div>
+        </header>
+        <div class="sale-box-payment">
+            <span class="sale-box-payment__price">
+                $650
+            </span>
+            <span class="sale-box-payment__price sale-box-payment__price--cents">
+                00
+            </span>
+            <span class="sale-box-payment__frequency">
+                Per<br>Month
+            </span>
+        </div>
+        <ul class="sale-box-list">
+             
+            <li class="sale-box-list__item sale-box-list__item--fee">$300.00 Setup Fee</li>
+            
+            <li class="sale-box-list__item">512GB DDR4 ECC RAM</li>
+            <li class="sale-box-list__item">2x960GB NVME SSD</li>
+            <li class="sale-box-list__item">AMD EPYC (Ryzen) (24c/48t)</li>
+            
+            <li class="sale-box-list__item">50TB Bandwidth</li>
+        </ul>
+        
+    </article>
+    
+</section>
+<div class="text-center">
+  <!--<a href="#" class="btn product-panel-more-btn">More details</a>-->
+</div>
+<h5 class="product-panel-custom">
+  Need something tailored to your needs?
+  <a href="/contact">Contact Us</a> and we'll get back to you
+  within 24 hours with a quote
+</h5>
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Privex",
+    "url": "https://www.privex.io/",
+    "logo": "https://www.privex.io/static/assets/img/logo-withtext.png",
+    "sameAs": [
+      "https://twitter.com/PrivexInc",
+      "https://github.com/Privex",
+      "https://www.youtube.com/channel/UCCcT8kzHDslmP3FTzckP_Hw",
+      "https://steemit.com/@privex"
+    ]
+  }
+</script>
+
+
+</div>
+
+<footer class="footer">
+    <img class="footer__logo" src="https://cdn.privex.io/privex.io/svg/privex_logo_hex_tp.svg" alt="Privex Logo" />
+
+
+
+    <nav class="footer-nav">
+        <ul class="footer-nav__list">
+            <li class="footer-nav__list-item">
+                <h6 class="footer-nav__title">Company</h6>
+            </li>
+            <li class="footer-nav__list-item">
+                <a href="/about" class="footer-nav__link">
+                    <img src="https://cdn.privex.io/privex.io/svg/brand.svg" alt="Privex Logo" width="16px">
+                    Who We Are
+                </a>
+            </li>
+            <li class="footer-nav__list-item">
+                <a href="/privacy" class="footer-nav__link">
+                    <i class="fa fa-id-card"></i>
+                    Privacy Policy
+                </a>
+            </li>
+            <li class="footer-nav__list-item">
+                <a href="/logo/" class="footer-nav__link">
+                    <img src="https://cdn.privex.io/privex.io/img/logo-privex.png" alt="Privex Logo" width="20px" /> &nbsp;&nbsp;
+                    Our Logo (Brand/Press Pack)
+                </a>
+            </li>
+            <li class="footer-nav__list-item">
+                <a href="/network/" class="footer-nav__link">
+                    <i class="fa fa-plug"></i> Our Network
+                </a>
+            </li>
+        </ul>
+
+        <ul class="footer-nav__list">
+            <li class="footer-nav__list-item">
+                <h6 class="footer-nav__title">Service</h6>
+            </li>
+            <li class="footer-nav__list-item">
+                <a href="/faq/" class="footer-nav__link"> <i class="fa fa-question-circle"></i> FAQ</a>
+            </li>
+            <li class="footer-nav__list-item">
+                <a href="/peering/" class="footer-nav__link"><i class="fa fa-plug"></i>  Peering with Privex</a>
+            </li>
+            <li class="footer-nav__list-item">
+                <a href="http://privexioc67u24lsmssoeixnml2exr3les4pbtyqtmv3zvonvcc72jyd.onion/" class="footer-nav__link" target="_blank">
+                    <img src="https://cdn.privex.io/img/tor/tor_color.svg" alt="Tor Logo" width="20px" /> &nbsp;&nbsp; Tor Hidden Service
+                </a>
+            </li>
+            <li class="footer-nav__list-item">
+                <a href="/articles/privex-i2p/" class="footer-nav__link">
+                    <img src="https://cdn.privex.io/img/i2p/i2plogo.svg" alt="I2P Logo" width="16px" />&nbsp;&nbsp;
+                    I2P Eepsite (privex.i2p)
+                </a>
+            </li>
+            <li class="footer-nav__list-item">
+                <a href="/tor-exit-policy/" class="footer-nav__link">
+                    <img src="https://cdn.privex.io/img/tor/tor_color.svg" alt="Tor Logo" width="20px"/> &nbsp;&nbsp; Tor Exit Policy
+                </a>
+            </li>
+        </ul>
+
+        <ul class="footer-nav__list">
+            <li class="footer-nav__list-item">
+                <h6 class="footer-nav__title">Connect</h6>
+            </li>
+            <li class="footer-nav__list-item">
+                <a href="https://twitter.com/PrivexInc" class="footer-nav__link" target="_blank"><i class="fa fa-twitter"></i> Twitter</a>
+            </li>
+            <li class="footer-nav__list-item">
+                <a href="https://github.com/privex" class="footer-nav__link" target="_blank"><i class="fa fa-github"></i> GitHub</a>
+            </li>
+            <li class="footer-nav__list-item">
+                <a href="https://peakd.com/@privex" class="footer-nav__link" target="_blank">
+                    <img src="https://cdn.privex.io/img/coins/svg/hive.svg" width="16px" /> Hive Blog (Peakd)
+                </a>
+            </li>
+            <li class="footer-nav__list-item">
+                <a href="https://discord.privex.io" class="footer-nav__link" target="_blank"><i class="fa fa-discord"></i> Discord</a>
+            </li>
+            <li class="footer-nav__list-item">
+                <a href="https://riot.privex.io" class="footer-nav__link" target="_blank"><i class="fa fa-matrix-org"></i> Matrix Chat</a>
+            </li>
+            <li class="footer-nav__list-item">
+                <a href="https://privex.social" class="footer-nav__link" target="_blank"><i class="fa fa-mastodon"></i> Mastodon</a>
+            </li>
+        </ul>
+
+
+    </nav>
+
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+            <div class="row" style="color: #fff;">
+                <div class="col-sm-4 col-sm-offset-4">
+                    <h2>We Accept</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <img src="https://cdn.privex.io/img/coins/svg/bitcoin.svg" alt="Bitcoin" width="100%">
+                </div>
+                <div class="col-sm-2">
+                    <img src="https://cdn.privex.io/img/coins/svg/litecoin.svg" alt="Litecoin" width="100%">
+                </div>
+                <div class="col-sm-2">
+                    <img src="https://cdn.privex.io/img/coins/svg/hive.svg" alt="Hive" width="100%">
+                </div>
+                <div class="col-sm-2">
+                    <img src="https://cdn.privex.io/img/coins/svg/monero.svg" alt="Monero" width="100%">
+                </div>
+                <div class="col-sm-2">
+                    <img src="https://cdn.privex.io/img/coins/svg/eos.svg" alt="EOS" width="100%" style="filter: invert(100%);">
+                </div>
+                <div class="col-sm-2">
+                    <img src="https://cdn.privex.io/img/coins/svg/dogecoin.svg" alt="Dogecoin" width="100%">
+                </div>
+            </div>
+            <div class="row" style="color: #fff;">
+                <div class="col-sm-2">
+                    Bitcoin
+                </div>
+                <div class="col-sm-2">
+                    Litecoin
+                </div>
+                <div class="col-sm-2">
+                    HIVE / HBD
+                </div>
+                <div class="col-sm-2">
+                    Monero (XMR)
+                </div>
+                <div class="col-sm-2">
+                    EOS
+                </div>
+                <div class="col-sm-2">
+                    Dogecoin
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <br/>
+
+
+        <!-- TrustBox widget - Micro Review Count -->
+        <div class="trustpilot-widget" data-locale="en-US" data-template-id="5419b6a8b0d04a076446a9ad" data-businessunit-id="5a059dc60000ff0005b01309" data-style-height="24px" data-style-width="100%" data-theme="dark" data-token="6abb1615-bdaf-4262-9f8f-25e617218f39" data-min-review-count="10" data-style-alignment="center">
+          <a href="https://www.trustpilot.com/review/www.privex.io" target="_blank" rel="noopener">Trustpilot</a>
+        </div>
+        <!-- End TrustBox widget -->
+
+    <div class="footer__copyright">
+        Privex Belize &copy; 2026. Putting your privacy first.
+    </div>
+
+
+</footer>
+
+
+
+
+
+    <script src="https://cdn.privex.io/lib/notie/4.3.1/notie.min.js"
+            integrity="sha384-Ulw8y0TpoFZw3cNSRM88s1+p9O/TL6qMFIzDn9Bs+qETYhMp0UwMiv+vCylRfZVI"
+            crossorigin="anonymous" defer></script>
+    <script src="https://cdn.privex.io/lib/clipboard/2.0.4/clipboard.min.js"
+            integrity="sha384-8CYhPwYlLELodlcQV713V9ZikA3DlCVaXFDpjHfP8Z36gpddf/Vrt47XmKDsCttu"
+            crossorigin="anonymous" defer></script>
+    <script src="https://cdn.privex.io/lib/privexrandom/copy-select.js"
+            integrity="sha384-O/XHrebvoBTIK85shTFYIeotkNUc/DF0NrWSzs7YECUX5izipsOagejqwFHyKXfw"
+            crossorigin="anonymous" defer></script>
+    <script src="https://cdn.privex.io/lib/jquery/3.3.1/jquery.min.js"
+            integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
+            crossorigin="anonymous"></script>
+
+
+
+
+
+
+</body>
+</html>

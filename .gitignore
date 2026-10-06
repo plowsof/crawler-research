@@ -1,0 +1,7 @@
+__pycache__/
+*.aux
+*.log
+*.bbl
+*.blg
+*.out
+*.toc

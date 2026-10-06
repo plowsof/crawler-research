@@ -1,0 +1,13 @@
+Scenario,Alone: median,Alone: max,10+ honest: median,All: max
+"Oct 2026, /24 dedup, 80% unreachable",72,102,45,110
+"Oct 2026, AS dedup, 80% unreachable",387,452,1,452
+"Oct 2026, hybrid, 80% unreachable",145,179,12,190
+"Oct 2026, /24 dedup, 90% unreachable",151,192,87,198
+"Oct 2026, AS dedup, 90% unreachable",801,877,3,877
+"Oct 2026, hybrid, 90% unreachable",302,362,26,362
+"May 2025, /24 dedup, 80% unreachable",88,116,87,121
+"May 2025, AS dedup, 80% unreachable",320,372,6,372
+"May 2025, hybrid, 80% unreachable",104,135,81,140
+"May 2025, /24 dedup, 90% unreachable",183,225,181,227
+"May 2025, AS dedup, 90% unreachable",665,738,13,738
+"May 2025, hybrid, 90% unreachable",218,272,173,272

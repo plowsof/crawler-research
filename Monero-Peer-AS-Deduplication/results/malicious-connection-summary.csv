@@ -1,0 +1,13 @@
+Scenario,N honest nodes,Min.,1st Qu.,Median,Mean,3rd Qu.,Max.
+"Oct 2026, /24 dedup, 80% unreachable",18622,0,3,4,4.35227150681989,5,11
+"Oct 2026, AS dedup, 80% unreachable",18622,0,0,0,0.126892922349909,0,3
+"Oct 2026, hybrid, 80% unreachable",18622,0,0,1,0.784502201696918,1,4
+"Oct 2026, /24 dedup, 90% unreachable",38537,0,3,4,4.35124685367309,5,11
+"Oct 2026, AS dedup, 90% unreachable",38537,0,0,0,0.130497962996601,0,3
+"Oct 2026, hybrid, 90% unreachable",38537,0,0,1,0.783065625243273,1,4
+"May 2025, /24 dedup, 80% unreachable",21192,0,0,1,1.06073046432616,2,7
+"May 2025, AS dedup, 80% unreachable",21192,0,0,0,0.0894677236693092,0,3
+"May 2025, hybrid, 80% unreachable",21192,0,0,0,0.560400151000378,1,4
+"May 2025, /24 dedup, 90% unreachable",44227,0,0,1,1.05293146720329,2,7
+"May 2025, AS dedup, 90% unreachable",44227,0,0,0,0.0890632419110498,0,3
+"May 2025, hybrid, 90% unreachable",44227,0,0,0,0.564202862504805,1,4

@@ -1,0 +1,101 @@
+asn,sources,x4b_dc,as_name,country,pdb_name,pdb_type,website,bgptools_tags,verdict,evidence,evidence_url,price,currency,usd_month,ipv4,source
+20956,bitcoin,0,SSI-AS,BG,,,,,U,no offer found,,,,,,
+47610,bitcoin+tor,0,RWTH-AS,DE,,,,,N,network name,,,,,,registry
+22750,tor,0,BCSNET,ZA,BCSGroup,Cable/DSL/ISP,http://www.bcsgroup.co.za,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/22750,,,,,tag
+33363,bitcoin+monero,0,BHN-33363,US,Charter Communications (33363),Cable/DSL/ISP,https://www.spectrum.com/,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/33363,,,,,tag
+10620,bitcoin,0,Telmex Colombia S.A.,CO,,,,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/10620,,,,,tag
+7489,tor,1,HOSTUS-GLOBAL-AS HostUS,HK,HostUS,Content,https://hostus.com/,vpsh,R,"KVM VPS, 512 MB, USD 35/year, 1 IPv4",https://www.whtop.com/plans/hostus.us/155736,2.9166666666666665,USD,2.92,included,secondary
+48239,tor,0,"ITTV-AS Kiev, Ukraine",UA,IT-TV,Cable/DSL/ISP,http://www.it-tv.org,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/48239,,,,,tag
+44574,bitcoin,0,A4N Network Services,GB,AS44574 Networks,Content,http://as44574.net/,,U,no offer found,http://as44574.net/,,,,,
+1547,bitcoin,0,IDK-NETWORK,MD,JSC InterDnestrCom (IDC),Cable/DSL/ISP,http://idknet.com/,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/1547,,,,,tag
+7296,bitcoin,0,AS-DYNASCALE-LAX,US,"Alchemy Communications, Inc.",Content,http://www.alchemy.net,,R,"bare metal servers, private cloud, colocation (sales)",https://www.ocolo.io/colocation/dynascale-data-center/,,,,,secondary
+8445,bitcoin+tor,0,SALZBURG-AG-AS,AT,Salzburg AG,Cable/DSL/ISP,http://www.salzburg-ag.at,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/8445,,,,,tag
+150706,bitcoin,0,"HKZTCL-AS-AP Hong Kong Zhengxing Technology Co., Ltd.",HK,,,,,U,no offer found,,,,,,
+21581,bitcoin,0,M5HOSTING,US,M5 Computer Security / M5Hosting,Content,http://www.m5hosting.com,vpsh,R,"dedicated servers, bare metal, cloud instances",https://www.m5hosting.com,,,,,primary
+46455,bitcoin,0,NLI-ISP,US,NetworkLubbock,NSP,https://jsitel.com/,,U,no offer found,https://jsitel.com/,,,,,
+21453,bitcoin,0,FLEX-AS,RU,Flex,Cable/DSL/ISP,http://flex.ru,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/21453,,,,,tag
+198193,bitcoin,0,ASN-TCABLE,ES,Television por Cable Santa Pola,Cable/DSL/ISP,http://www.grupotelecable.es/,,N,consumer fibre ISP,https://www.excom.es/,,,,,primary
+215467,bitcoin,0,SKHRON Skhron OU: skhron.eu,EE,Skhron,Content;Network Services,https://skhron.eu/,vpsh,R,"VPS EUR 1.69/month, IPv4 add-on EUR 0.65/month",https://skhron.eu/services,2.34,EUR,2.62,add-on included in price,primary
+36103,tor,0,CENTRALUTAH,US,CentraCom,Cable/DSL/ISP,https://www.centracom.com,,N,registry type Cable/DSL/ISP,https://www.centracom.com,,,,,registry
+58212,bitcoin+tor,0,DATAFOREST,DE,Dataforest,NSP,https://dataforest.net,vpsh,R,self-service cloud 'Seeds' from EUR 4.07/month,https://www.vpsbenchmarks.com/hosters/dataforest_cloud,4.07,EUR,4.56,not stated,secondary
+33915,bitcoin+monero+tor,0,TNF-AS,NL,Vodafone Libertel B.V.,Cable/DSL/ISP,http://www.vodafone.nl/zakelijk/,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/33915,,,,,tag
+51290,tor,1,HOSTEAM-AS,PL,HosTeam,Content,http://hosteam.pl/,vpsh,R,"VPS Bronze 15.00 PLN/30d net, IPv4 + IPv6",https://hosteam.pl/pl/vps,15.0,PLN,3.84,included,primary
+137266,monero,0,CHINATELECOM-HUBEI-WUHAN-5G-NETWORK CHINATELECOM Hubei province Wuhan 5G network,CN,,,,,N,network name,,,,,,registry
+213269,monero,0,OSS,FI,,,,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/213269,,,,,tag
+31208,monero,0,MF-CENTER-AS,RU,,,,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/31208,,,,,tag
+16075,tor,0,TAZ-AS taz die tageszeitung autonomous system,DE,TAZ,Content,https://www.taz.de,,N,registry type Content,https://www.taz.de,,,,,registry
+215590,monero,0,DPKGSOFT-AS,GB,DpkgSoft International Limited,Enterprise;Network Services,https://xorek.cloud/,,R,virtual servers from 459 RUB/month,https://xorek.cloud/,459,RUB,5.4,not stated,primary
+812,bitcoin+monero+tor,0,ROGERS-COMMUNICATIONS,CA,Rogers Cable,Cable/DSL/ISP,http://www.rogers.com,dsl+mobile,N,bgp.tools tag dsl+mobile,https://bgp.tools/as/812,,,,,tag
+216071,bitcoin+monero+tor,1,VDSINA,AE,VDSINA,Content,https://www.vdsina.com,vpsh,R,VDS/VPS from USD 2.10/month,https://www.vdsina.com,2.1,USD,2.1,not stated,primary
+9943,bitcoin,0,KNCTV-AS KangNam CableTV,KR,,,,,N,network name,,,,,,registry
+30377,monero,0,MACST-DUB,US,,,,,U,no offer found,,,,,,
+33657,bitcoin+monero+tor,0,CMCS,US,Comcast - Baltimore and D.C.,Cable/DSL/ISP,,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/33657,,,,,tag
+30404,bitcoin,0,BLUESTREAMFIBER,US,Blue Stream,Cable/DSL/ISP,https://www.bluestreamfiber.com,,N,registry type Cable/DSL/ISP,https://www.bluestreamfiber.com,,,,,registry
+22489,bitcoin,0,DATABANK-CASTLEACCESS,US,,,,,U,no offer found,,,,,,
+30983,monero+tor,0,MARWAN-AS,MA,MARWAN - Moroccan Academic Network,Educational/Research,https://marwan.ma,,N,registry type Educational/Research,https://marwan.ma,,,,,registry
+20766,tor,0,"GITOYEN-MAIN-AS The main Autonomous System of Gitoyen Paris, France.",FR,Association Gitoyen,Non-Profit,https://www.gitoyen.net/,,U,no offer found,https://www.gitoyen.net/,,,,,
+10013,bitcoin,0,"FBDC FreeBit Co.,Ltd.",JP,"FreeBit Co,Ltd.",NSP,https://www.freebit.com/,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/10013,,,,,tag
+4685,bitcoin,0,ASAHI-NET Asahi Net,JP,ASAHI Net,Cable/DSL/ISP,http://www.asahi-net.or.jp/,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/4685,,,,,tag
+202282,bitcoin+tor,0,FIBRUS,GB,Fibrus,Cable/DSL/ISP,https://www.fibrus.com,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/202282,,,,,tag
+15493,bitcoin,0,"RUSCOMP-AS Russian company LLC. Internet Service Provider, Tyumen",RU,,,,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/15493,,,,,tag
+401401,tor,0,UNREDACTED-NOISENET,US,Unredacted Inc (NoiseNet),NSP;Non-Profit,https://unredacted.org/,,U,no offer found,https://unredacted.org/,,,,,
+200736,bitcoin+monero+tor,0,INALAN,GR,MEDIANET INVEST M.I.K.E,Cable/DSL/ISP,https://www.inalan.gr/,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/200736,,,,,tag
+10996,tor,0,CONCORDE,CA,VIF Internet,Cable/DSL/ISP,http://www.vif.com,,N,registry type Cable/DSL/ISP,http://www.vif.com,,,,,registry
+19949,tor,0,FNFISP,US,FNFISP,,,,U,no offer found,,,,,,
+24877,monero,0,INIT Init Corporation Autonomous System,LT,UAB INIT Kns,,http://init.lt,,U,no offer found,http://init.lt,,,,,
+56030,monero+tor,0,VOYAGERNET-AS-AP Voyager Internet Ltd.,NZ,Voyager Internet,NSP,http://www.voyager.co.nz,vpsh+dsl,R,"cloud servers / virtual data centre, colocation",http://www.voyager.co.nz/business/hosting/virtual-data-centre,,,,,primary
+142108,bitcoin,0,ROTKONETWORKSOU-AS-AP Rotko Networks,TH,Rotko Networks,Network Services,http://rotko.net,,U,no offer found,http://rotko.net,,,,,
+202053,bitcoin+tor,1,UPCLOUD,FI,UpCloud,Content,http://www.upcloud.com,vpsh,R,"Starter cloud server from USD 3.5/month, IPv4 included",https://upcloud.com/pricing,3.5,USD,3.5,included,secondary
+141356,bitcoin,0,UAL-AS-AP Universe Action Limited,HK,Universe Action,,,,U,no offer found,,,,,,
+202596,monero,0,GNETWORK,GB,G.Network Communications,,http://g.network,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/202596,,,,,tag
+42675,bitcoin+monero+tor,1,OBEHOSTING Obehosting AB,SE,Obehosting,,https://obe.net/hosting,vpsh,R,"dedicated servers and colocation, Stockholm",https://websiteplanet.com/web-hosting/obehosting,,,,,secondary
+16302,bitcoin+monero+tor,0,SUOMICOMMUNICATIONS,FI,SuomiCommunications,Cable/DSL/ISP,https://www.suomicom.fi/,vpsh+dsl,R,bgp.tools tag Server Hosting,https://bgp.tools/as/16302,,,,,tag
+965,tor,0,WEBHOSTINGHOLDINGS,US,,,,,U,no offer found,,,,,,
+200295,bitcoin,0,MT-SKOED,MT,,,,,U,no offer found,,,,,,
+198985,tor,0,AQUILENET AQUILENET,FR,Aquilenet,Non-Profit,https://www.aquilenet.fr,,U,no offer found,https://www.aquilenet.fr,,,,,
+12310,monero,0,INES Bucharest  ROMANIA,RO,iNES Group,NSP,http://www.ines.ro,,R,"VPS and dedicated servers, price on request",https://www.whtop.com/plans/ines.ro/153163,,,,,secondary
+44512,bitcoin,0,KONVERTO-AS,IT,KONVERTO,NSP,https://www.konverto.eu,,U,no offer found,https://www.konverto.eu,,,,,
+40244,tor,1,TURNKEY-INTERNET,US,Turnkey Internet,NSP,https://turnkeyinternet.net,vpsh,R,VPS pro.sm.amd USD 10/month,https://www.hivelocity.net/vps/,10,USD,10.0,not stated,primary
+56546,bitcoin,0,KTASTRA-AS,BG,,,,,U,no offer found,,,,,,
+9158,tor,0,TELENOR_DANMARK_AS,DK,Telenor Denmark,Network Services,http://www.telenor.dk,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/9158,,,,,tag
+34700,bitcoin+monero+tor,0,CITYNET-AS Maxnet LLC,UA,Maxnet Ukraine,Cable/DSL/ISP,https://maxnet.ua,dsl,R,"VPS 250 UAH/month, 1 IPv4 address",https://maxnet.ua/vps/,250,UAH,5.55,included,primary
+203953,bitcoin+tor,0,HIPER,DK,,,,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/203953,,,,,tag
+49531,tor,0,NETCOM-R-AS,RU,,,,,U,no offer found,,,,,,
+25513,bitcoin,0,ASN-MGTS-USPD,RU,MGTS,,,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/25513,,,,,tag
+29909,bitcoin,0,METROOPTIC,CA,Metro Optic,NSP,http://www.metrooptic.com,,U,no offer found,http://www.metrooptic.com,,,,,
+18106,tor,0,VIEWQWEST-SG-AP Viewqwest Pte Ltd,SG,ViewQwest,Cable/DSL/ISP;Enterprise;NSP;Network Services,http://www.viewqwest.com,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/18106,,,,,tag
+19799,tor,0,HCS,US,,,,,U,no offer found,,,,,,
+5408,tor,0,GR-NET www.grnet.gr,GR,National Infrastructures for Research and Technology (GRNET),Educational/Research,http://www.grnet.gr,,N,registry type Educational/Research,http://www.grnet.gr,,,,,registry
+54936,bitcoin+tor,0,WGL-107-ZONA-WYYERD,US,Wyyerd Group,Cable/DSL/ISP,https://www.wyyerd.com/,,N,registry type Cable/DSL/ISP,https://www.wyyerd.com/,,,,,registry
+1448,bitcoin,0,UNITED-BROADBAND,US,United Cooperative Services,Cable/DSL/ISP,https://ucs.net,,N,registry type Cable/DSL/ISP,https://ucs.net,,,,,registry
+57794,bitcoin,0,HCN-01 *** Peering Info from HCN *** UpStream,GR,HCN,Cable/DSL/ISP,http://www.hcn.gr,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/57794,,,,,tag
+4364,bitcoin,0,IGLOU,US,,,,,U,no offer found,,,,,,
+35366,tor,1,ISPPRO-AS ISPPRO-AS covers the networks of ISPpro,DE,ISPpro Internet KG,,http://www.isppro.de,vpsh,R,vServer and dedicated root servers,https://www.datacentermap.com/c/isppro-internet-kg/,,,,,secondary
+5607,bitcoin+tor,0,BSKYB-BROADBAND-AS,GB,Sky Broadband,Cable/DSL/ISP,http://www.sky.com/products/broadband-talk/,dsl+mobile,N,bgp.tools tag dsl+mobile,https://bgp.tools/as/5607,,,,,tag
+4764,bitcoin+monero+tor,0,WIDEBAND-AS-AP Aussie Broadband,AU,Aussie Broadband,Cable/DSL/ISP,https://www.aussiebroadband.com.au,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/4764,,,,,tag
+208208,bitcoin+tor,0,CYBERSE Cyberse GmbH & Co. KG,DE,CYBERSE,NSP;Network Services,https://cyberse.de,vpsh,R,"business cloud from 79 EUR/month, colocation",https://cyberse.de/business-cloud,,,,,primary
+34941,bitcoin,0,CYBERCOM-AS,SE,,,,,U,no offer found,,,,,,
+396948,monero,0,CLOUDWEBMANAGE-SC,US,,,,,U,no offer found,,,,,,
+6057,bitcoin,0,Administracion Nacional de Telecomunicaciones,UY,ANTEL,Cable/DSL/ISP,http://www.antel.com.uy,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/6057,,,,,tag
+270039,tor,0,,,PRILZ COLOMBIA,,,,U,no offer found,,,,,,
+61900,bitcoin,0,Mais Internet LTDA EPP,BR,Mais Internet,Cable/DSL/ISP,https://maisinternet.net.br,,N,registry type Cable/DSL/ISP,https://maisinternet.net.br,,,,,registry
+12668,bitcoin+monero,0,MIRALOGIC-AS,RU,MiraLogic Telecommunication Systems,NSP,http://miralogic.ru,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/12668,,,,,tag
+51561,bitcoin,0,AS-ICUK,GB,ICUK Computing Services Ltd,NSP,https://www.icuk.net/,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/51561,,,,,tag
+200303,tor,0,LUMASERV LUMASERV GmbH,DE,LUMASERV,NSP,https://lumaserv.com,vpsh,R,vServer / cloud computing,https://lumaserv.com/managed-cloud/cloud-computing,,,,,primary
+42532,tor,1,VEESP-LV-AS,LV,Veesp SIA,NSP,https://veesp.com,vpsh,R,VPS and dedicated servers,https://veesp.com/,,,,,primary
+200950,tor,0,CALIBOURNETWORK _,GB,Calibour Limited,Cable/DSL/ISP;Content;Educational/Research;Enterprise;NSP;Network Services;Non-Profit,https://calibour.com,vpsh,R,VPS and dedicated servers,https://calibour.com/services.html,,,,,primary
+45899,bitcoin+monero+tor,0,VNPT-AS-VN VNPT Corp,VN,VNPT,Cable/DSL/ISP,http://www.vnpt.vn,vpsh+dsl+mobile,R,bgp.tools tag Server Hosting,https://bgp.tools/as/45899,,,,,tag
+5617,bitcoin+monero+tor,0,TPNET,PL,Orange Polska - TPNET,Cable/DSL/ISP,http://www.orange.pl,dsl+mobile,N,bgp.tools tag dsl+mobile,https://bgp.tools/as/5617,,,,,tag
+12430,bitcoin+tor,0,VODAFONE_ES,ES,Vodafone España,Cable/DSL/ISP,http://www.vodafone.es,dsl+mobile,N,bgp.tools tag dsl+mobile,https://bgp.tools/as/12430,,,,,tag
+197648,tor,1,CL8ASN1,CY,,,,,U,no offer found,,,,,,
+47,bitcoin,0,USC-AS,US,University of Southern California - AS47,,http://usc.edu,,N,network name,http://usc.edu,,,,,registry
+206264,tor,0,AMARUTU-TECHNOLOGY,SC,Amarutu Technology Ltd.,NSP,https://koddos.net,vpsh,R,VPS Medium Risk A USD 39.99/month,https://koddos.net/medium-risk-hosting.html,39.99,USD,39.99,not stated,primary
+204272,bitcoin,0,ASARTA-SPB-AS St.Petersburg,RU,ASARTA,NSP,https://asarta.ru/,,U,no offer found,https://asarta.ru/,,,,,
+396325,bitcoin,0,FUSION-NETWORKS,US,The Fusion Networks,,http://www.fusionnetworks.me,,N,residential and fibre internet,https://fusionnetworks.me/services/residential-internet/,,,,,primary
+399122,tor,0,AS-VPSHOUSE,US,VPS House Technology Group LLC,Content,https://www.vpshouse.pro/,vpsh,R,"VPS, cloud and dedicated servers",https://www.vpshouse.pro/,,,,,primary
+49791,bitcoin,0,AS-3HCLOUD,US,3HCLOUD,Content,https://3hcloud.com,vpsh,R,"shared vCPU server USD 1.5/month, IPv4 priced separately by region",https://3hcloud.com/pricing,,,,"extra, price not stated",primary
+24233,bitcoin,0,SUPERLOOP-AS-AP SUPERLOOP BigAir,AU,,,,,N,network name,,,,,,registry
+25353,tor,0,BAR-AS Weidenweg 235,CH,BAR Informatik Net,NSP,http://www.barinformatik.ch,,U,no offer found,http://www.barinformatik.ch,,,,,
+50771,bitcoin,0,GIGALINK-LTD-AS,RU,,,,dsl,N,bgp.tools tag dsl,https://bgp.tools/as/50771,,,,,tag
+395502,bitcoin+monero,0,JCOLO,US,Sunbreak Electronics,NSP,http://www.jeffcolo.net,,U,no offer found,http://www.jeffcolo.net,,,,,
+399512,bitcoin,0,GREATWAVE-HE-A,US,,,,,U,no offer found,,,,,,

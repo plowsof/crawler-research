@@ -1,0 +1,5 @@
+Dataset,Nodes,IP addresses,/16 subnets,/24 subnets,ASNs,Effective ASNs
+Oct 2026,Suspected spy,1293,77,1132,10,1
+Oct 2026,Honest,2690,1273,1983,573,13.2
+May 2025,Honest,2764,1903,2647,794,61.9
+May 2025,Suspected spy,1843,61,257,7,5.5

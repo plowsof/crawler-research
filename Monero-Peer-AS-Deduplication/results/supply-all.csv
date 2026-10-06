@@ -1,0 +1,22 @@
+scenario,K,grouping,n.adversary,mean,max,Rule
+K9,9,s24,1293,4.70631970260223,10,/24 deduplication (master)
+K9,9,asn,1293,0.151672862453532,4,AS deduplication (--asmap)
+K9,9,hybrid,1293,3.79368029739777,9,Hybrid
+K99,99,s24,1293,4.70631970260223,10,/24 deduplication (master)
+K99,99,asn,1293,1.60631970260223,6,AS deduplication (--asmap)
+K99,99,hybrid,1293,5.23011152416357,11,Hybrid
+K933,933,s24,1293,4.70631970260223,10,/24 deduplication (master)
+K933,933,asn,1293,7.48884758364312,12,AS deduplication (--asmap)
+K933,933,hybrid,1293,5.29776951672863,11,Hybrid
+K200,200,s24,1293,4.70631970260223,10,/24 deduplication (master)
+K200,200,asn,1293,3.03345724907063,9,AS deduplication (--asmap)
+K200,200,hybrid,1293,5.30520446096654,11,Hybrid
+K300,300,s24,1293,4.70631970260223,10,/24 deduplication (master)
+K300,300,asn,1293,4.0907063197026,10,AS deduplication (--asmap)
+K300,300,hybrid,1293,5.32081784386617,10,Hybrid
+K400,400,s24,1293,4.70631970260223,10,/24 deduplication (master)
+K400,400,asn,1293,4.97620817843866,10,AS deduplication (--asmap)
+K400,400,hybrid,1293,5.32639405204461,10,Hybrid
+K600,600,s24,1293,4.70631970260223,10,/24 deduplication (master)
+K600,600,asn,1293,6.21226765799257,11,AS deduplication (--asmap)
+K600,600,hybrid,1293,5.32193308550186,11,Hybrid

@@ -1,0 +1,10 @@
+provider,asn,plan,price,currency,usd_month,ipv4,source_url,accessed
+InterServer,19318,1 Slice (1 core 2GB 40GB SSD),3.00,USD,3.00,"Static public IP addresses",https://www.interserver.net/vps/,2026-10-05
+DigitalOcean,14061,Basic Droplet 512 MiB 1 vCPU 10 GiB,4.00,USD,4.00,"each Droplet ... comes with its own public IPv4 address",https://www.digitalocean.com/pricing/droplets,2026-10-05
+OVHcloud,16276,VPS-1 (2 vCores 4 GB 40 GB),4.54,USD,4.54,"Dedicated IPv4 ... Included",https://www.ovhcloud.com/en/vps/,2026-10-05
+Contabo,51167,Cloud VPS (from),4.40,EUR,4.93,"Dedicated IPv4 and IPv6 addresses come with every plan",https://contabo.com/en/vps/,2026-10-05
+Contabo Asia,141995,Cloud VPS (from),4.40,EUR,4.93,"Dedicated IPv4 and IPv6 addresses come with every plan",https://contabo.com/en/vps/,2026-10-05
+Contabo US,40021,Cloud VPS (from),4.40,EUR,4.93,"Dedicated IPv4 and IPv6 addresses come with every plan",https://contabo.com/en/vps/,2026-10-05
+Amazon Lightsail,16509,Linux bundle with public IPv4 (0.5 GB 2 vCPUs 20 GB),5.00,USD,5.00,"Bundles with public IPv4 address",https://aws.amazon.com/lightsail/pricing/,2026-10-05
+IONOS,8560,VPS S+ (1 vCore 2 GB 60 GB) regular price,6.00,USD,6.00,"1x IPv4 address per server included",https://www.ionos.com/servers/vps,2026-10-05
+AlexHost,200019,U1 (1 vCore 1.5 GB 10 GB),6.00,EUR,6.72,"dedicated IPv4",https://alexhost.com/vps/,2026-10-05

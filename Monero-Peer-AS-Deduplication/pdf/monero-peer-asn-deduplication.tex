@@ -1,0 +1,403 @@
+\documentclass[english]{mrl}
+
+\usepackage{float}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+\theoremstyle{plain}
+\newtheorem{prop}{\protect\propositionname}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage[stable,splitrule]{footmisc}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{setspace}
+\AtBeginDocument{\let~=\nobreakspace}
+
+\usepackage{lineno}
+\linenumbers
+
+\usepackage{draftwatermark}
+\SetWatermarkText{DRAFT}
+\SetWatermarkScale{7}
+\SetWatermarkLightness{0.95}
+
+\hypersetup{colorlinks=false}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{longtable}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+\usepackage{array}
+\usepackage{url}
+\usepackage{multirow}
+
+\hypersetup{
+    bookmarks=true,
+    unicode=false,
+    pdftitle={Autonomous System Deduplication for Monero Node Peer Selection},
+    pdfauthor={Jean-Claude Sonnet, Giorgio Pretrani Trasformi, Qwen Stefani},
+    pdfsubject={},
+    pdfcreator={plowsof},
+    pdfproducer={},
+    pdfkeywords={},
+    colorlinks=false
+}
+
+\input{tables/numbers.tex}
+
+\title{Autonomous System Deduplication for Monero Node Peer Selection\\\vspace{.3cm}
+\large Draft v0.1}
+\authors{Jean-Claude Sonnet, Giorgio Pretrani Trasformi and Qwen Stefani}
+\affiliations{Monero Project contributor. Method, simulation code and game-theoretic model adapted from Rucknium (Monero Research Lab)}
+\date{\today}
+
+\type{RESEARCH NOTE}
+\ident{DRAFT}
+
+\makeatother
+
+\providecommand{\propositionname}{Proposition}
+
+\begin{document}
+
+\begin{abstract}
+Monero nodes deduplicate outbound peer candidates by /24 subnet (pull request \#9939), following Rucknium \cite{Rucknium2025}. Pull request \#11474 adds an opt-in \texttt{--asmap} option that deduplicates by autonomous system (AS) instead. This note applies Rucknium's simulation and game to AS deduplication. In October 2026 the suspected spy nodes occupy \spyTwentyFourNew{} /24 subnets, but \spyTopAsnPctNew{} percent of them are in one AS. Against them, AS deduplication reduces an honest node's outbound connections to suspected spy nodes from \simNewSubnetEightyMean{} to \simNewAsmapEightyMean{} out of 12 in simulation, and from \abCtrlPct{} to \abAsmapPct{} percent on live nodes. Honest nodes, however, occupy \thresholdNew{} times more /24 subnets than ASes, so an adversary that spreads over many ASes does better against AS deduplication. Servers in other ASes cost about the same as bulk servers, so the number of rentable ASes decides. AS deduplication stays better while the adversary can rent servers in fewer than about \kBreakEven{} ASes, and a sample survey estimates \svKR{} (\svKRLoLo{} to \svKRHiHi) rentable ASes among those that already host Tor, Bitcoin or Monero servers. The results support AS deduplication as an opt-in option, not as the default. Choosing Dandelion++ stems uniformly over the ASes of the outbound connections, without changing peer selection, reduces the probability that a stem is a suspected spy node from \stemObsCur{} to \stemObsDiv{} percent, and costs at most \stemRegretDiv{} percentage points against every adversary placement simulated.
+\end{abstract}
+
+\section{Statement of the problem}
+
+Spy nodes can reduce the effectiveness of Dandelion++ \cite{Fanti2018a}. Rucknium showed that an adversary can exploit bulk prices for whole subnets, and that deduplicating outbound peer candidates by /24 subnet reduces the share of an honest node's outbound connections made to suspected spy nodes from 30.8 to 8.8 percent \cite{Rucknium2025}. The deduplication was implemented in Monero pull request \#9939 \cite{MoneroPR9939}.
+
+Subnet deduplication assumes that the adversary's nodes are packed into few subnets. An adversary that rents virtual servers from a large cloud provider gets addresses scattered over many /24 subnets, but all of them inside the provider's autonomous system (AS). An AS is a network under a single routing policy, identified by an AS number (ASN). Bitcoin Core has grouped peers by ASN, using a map from IP prefixes to ASNs called an \emph{asmap}, since 2020 \cite{BitcoinPR16702}. Monero pull request \#11474 \cite{MoneroPR11474}, a revival of \#7935 \cite{MoneroPR7935}, adds an opt-in \texttt{--asmap} option that groups peers by ASN for outbound peer selection.
+
+When this was discussed on 5 October 2026, Rucknium accepted AS grouping as an opt-in option and stated the conditions for making it the default \cite{NWLB20261005}: an analysis showing ``with reasonable confidence, that the cure would not be worse than the disease'', as was done for /24 deduplication. He raised four concerns, which this note addresses in turn:
+\begin{enumerate}
+\item An adversary could spread across many ASNs in response to a default rollout, making the problem worse.
+\item Many honest nodes are concentrated in the ASNs of server providers, so an adversary could exploit AS avoidance to obtain more outbound connections than honest nodes.
+\item ASNs are harder to analyze than subnets because ASNs do not have a defined size.
+\item Nodes in sparsely populated ASNs would receive many more inbound connections.
+\end{enumerate}
+
+\section{Background}
+
+\subsection{Peer selection with /24 and AS deduplication}
+
+The selection rule is implemented in \texttt{make\_new\_connection\_from\_peerlist()} in \texttt{src/p2p/net\_node.inl} \cite{MoneroPR11474}. For each new outbound connection in the public zone, a node:
+\begin{enumerate}
+\item collects the \emph{groups} of its current connections. Without \texttt{--asmap} the group of an IPv4 address is its /24 subnet. With \texttt{--asmap} the group is the ASN that the asmap returns, and only outbound connections are counted;
+\item shuffles its peer list and keeps the first candidate of each group that is not already a connected group;
+\item picks one of the remaining candidates.
+\end{enumerate}
+After steps 1 and 2 there is one candidate per group, so the probability of selecting a group does not depend on how many addresses the group contains. Appendix \ref{sec:appendix-draw} shows that, when the final pick is uniform, the draw is equivalent to choosing a non-connected group uniformly and then a member of that group uniformly. This is why the size of an AS, concern 3 above, does not enter the analysis of an AS that contains only adversary nodes: a large AS and an AS with a single node are each one group.
+
+Bitcoin Core connects out to at most one peer per network group, which is the ASN when an asmap is used, and also uses the group to place addresses in its address manager buckets \cite{BitcoinInit,BitcoinPR16702}; candidates in an already connected group are skipped (\texttt{src/net.cpp}, line 2915, same commit). It does not deduplicate candidates in the way described above. Its asmap was introduced against AS-level routing attacks and eclipse attacks \cite{Apostolaki2017,Tran2020,Heilman2015}, not against spy nodes. It is opt-in in Bitcoin Core: \texttt{-asmap} with no file uses an embedded map and \texttt{-asmap=<file>} reads a map from disk \cite{BitcoinInit,BitcoinPR28792}. Eclipse attacks on Monero's peer-to-peer network are analyzed by \cite{Shi2025}.
+
+\subsection{The asmap}
+
+Pull request \#11474 embeds \texttt{2026/1788801420\_asmap.dat} from the \texttt{bitcoin-core/asmap-data} repository \cite{AsmapData,MoneroPR11474}. It is a ``filled'' map: in this note's own lookup of the map, every one of the $2^{32}$ IPv4 addresses resolves to an ASN, and 82,443 distinct ASNs appear in the IPv4 part of the map (replication code: \texttt{asmap\_coverage.py}). The fallback to /24 groups for unmapped addresses in pull request \#11474 is therefore never used for IPv4, and an adversary cannot use unmapped address space to get one group per /24.
+
+\section{Data}
+
+\noindent{\fboxrule 2pt\fbox{\begin{minipage}[t]{1\columnwidth - 2\fboxsep - 2\fboxrule}%
+
+\subsection{Box: Data and suspected spy node classification\label{sec:box-data}}
+
+\textbf{October 2026 data.} Reachable Monero nodes were collected by a crawler running on four vantage points \cite{Observatory}. A node is \emph{reachable} if a handshake to its advertised address succeeded. The snapshot was taken on 2026-10-05 at 16:19 UTC and contains \nReachNew{} distinct reachable IPv4 addresses.
+
+A node was classified as a suspected spy node if its handshake showed one of two protocol fingerprints that an unmodified \texttt{monerod} does not produce. The fingerprints are withheld from this public draft so that the operators cannot evade them, and are available to the Monero Research Lab on request. As a check for false positives, the classifier was applied to the default remote nodes in the Monero GUI pull request \#4601 \cite{GuiRemoteNodes}: of \ctrlHosts{} hosts, \ctrlIps{} IPv4 addresses resolved, \ctrlInData{} of them were in the reachable dataset, and \ctrlFlagged{} of those were classified as suspected spy nodes.
+
+\textbf{Ban-listed nodes.} The crawler does not handshake addresses in the MRL ban list \cite{MRLBanList}, version 2, so the snapshot contains none of them. To measure them, every ban-listed IPv4 address that peers gossiped to the crawler, \banProbed{} in total, was handshaked from the four vantage points on 2026-10-05 (replication code: \texttt{ban\_crawl.py}). \banReach{} (\banReachPct{} percent) completed a handshake. They occupy \banTwentyFour{} /24 subnets and \banAsnsReach{} ASNs, \banTopAsnN{} of them in AS\banTopAsn{} (SCNL-1-0001 \cite{IPtoASN}). They are added to the October 2026 data in Section \ref{sec:stem} to represent a node that does not use the ban list, which is the default.
+
+\textbf{May 2025 data.} To make the results reproducible without the withheld classification, the network simulations and the price-premium response are repeated on the data used in \cite{Rucknium2025}: the \texttt{good\_peers} network scan and the \texttt{ban\_list\_v1} ban list from the \texttt{xmrpeers} R package \cite{xmrpeers}, cleaned with the same code. This gives \nReachOld{} reachable IPv4 addresses, of which \nSpyOld{} are in the ban list, the same totals as in \cite{Rucknium2025}.
+
+\textbf{ASNs.} All addresses in both datasets are mapped to ASNs with the asmap embedded by pull request \#11474. The May 2025 addresses are therefore mapped with a map from 2026.%
+\end{minipage}}}
+
+\bigskip
+
+Table \ref{table-concentration} summarizes how the nodes in each dataset are grouped. In October 2026, the \nSpyNew{} suspected spy nodes occupy \spyTwentyFourNew{} distinct /24 subnets but only \spyAsnNew{} ASNs; \spyTopAsnNNew{} of them (\spyTopAsnPctNew{} percent) are in AS\spyTopAsnNew{}, which also hosts \honestInSpyTopAsnNew{} honest reachable nodes. /24 deduplication leaves almost one group per suspected spy node, while AS deduplication reduces them to a few groups. Honest nodes are less concentrated: \nHonestNew{} honest nodes occupy \hTwentyFourNew{} /24 subnets and \hAsnNew{} ASNs.
+
+\textbf{What the label means.} Both fingerprints show that a node runs modified software. Neither shows what its operator does with the connections it receives, so ``suspected spy node'' is an inference and should be read as ``node of a large fleet running modified software''. AS\spyTopAsnNew{} is DigitalOcean (DIGITALOCEAN-ASN \cite{IPtoASN}). The fleet is \spyShareOfTopAsn{} percent of the reachable Monero nodes in that AS, not a large part of DigitalOcean; the AS that hosts a node is not necessarily its operator. The fleet is uniform. Of its \fpDoN{} nodes in AS\spyTopAsnNew{}, \fpDoPort{} percent listen on the default port, \fpDoTip{} percent are within 10 blocks of the chain tip (honest nodes: \fpHonTip{}), \fpDoUnpruned{} percent are unpruned (honest: \fpHonUnpruned{}) and \fpDoRpc{} percent advertise an RPC port (honest: \fpHonRpc{}), and every node has its own peer ID (replication code: \texttt{fleet\_profile.py}). This is consistent with a single deployment, but the distinct peer IDs mean that a single operator cannot be shown from the handshake. \cite{Kopyciok2026} describe the same pattern, many anomalous peers concentrated in one AS that promotes its own addresses, for June 2025, and argue that a consistent deviation from the network baseline is significant for security ``regardless of ultimate intent''. That AS, LIONLINK-NETWORKS (AS54098), is also the largest AS among the ban-listed nodes in the May 2025 data (\spyTopAsnNOld{} nodes), and it announces the address ranges of the entity that b10c calls LinkingLion in the Bitcoin network \cite{b10c2024}. Benign explanations for the October 2026 fleet, such as a commercial remote-node service or a measurement project, cannot be excluded. None of the results in this note depends on intent: they measure how many of an honest node's outbound connections and Dandelion++ stems one concentrated fleet obtains, which bounds what it could learn whether or not it records transactions \cite{Fanti2018a,Sharma2022}.
+
+\input{tables/concentration.tex}
+
+Figure \ref{fig:treemap-asn} plots every reachable node in October 2026, grouped by ASN (black perimeters) and /24 subnet (yellow perimeters), in the style of \cite{Rucknium2025}. Figure \ref{fig:treemap-dedup} shows the groups that remain after deduplication, coloured by the share of suspected spy nodes in each group.
+
+\begin{figure}[H]
+\caption{ASN treemap of honest and suspected spy nodes, October 2026}
+\label{fig:treemap-asn}
+\centering{}\includegraphics[scale=0.45]{images/treemap-asn}
+\end{figure}
+
+\begin{figure}[H]
+\caption{Groups after deduplication, October 2026: left, /24 deduplication (monero master); right, AS deduplication (\texttt{--asmap})}
+\label{fig:treemap-dedup}
+\centering{}\includegraphics[width=0.49\linewidth]{images/treemap-24-dedup}\hfill\includegraphics[width=0.49\linewidth]{images/treemap-asn-dedup}
+\end{figure}
+
+\section{Simulated effect on current suspected spy nodes}
+
+The simulation is the one in \cite{Rucknium2025}, implemented by \texttt{gen.network()} in \texttt{xmrpeers} \cite{xmrpeers}, with one change: the subnet keys are replaced by a group key, so that the same function simulates /24 deduplication, AS deduplication, and the hybrid rule of Section \ref{sec:hybrid}. As in \cite{Rucknium2025}, every honest node, reachable or not, fills 12 outbound slots and then replaces a random connection 12 times; suspected spy nodes make no outbound connections; unreachable nodes are added so that 80 or 90 percent of honest nodes are unreachable; and peer list size limits are ignored. The faster draw used here was checked against the literal shuffle-and-deduplicate draw of \texttt{gen.network()}, and both agree with the analytical selection probability within sampling error (Appendix \ref{sec:appendix-draw}).
+
+Table \ref{table-malicious-connection-summary} gives the number of outbound connections, out of 12, from honest nodes to suspected spy nodes. With 80 percent unreachable nodes, the mean in October 2026 is \simNewSubnetEightyMean{} (\simNewSubnetEightyPct{} percent) with /24 deduplication and \simNewAsmapEightyMean{} (\simNewAsmapEightyPct{} percent) with AS deduplication. For the May 2025 data the means are \simOldSubnetEightyMean{} and \simOldAsmapEightyMean{}; the /24 value reproduces the \simOldSubnetEightyMean{} connections (\simOldSubnetEightyPct{} percent) that \cite{Rucknium2025} reports for subnet deduplication on the same data, which validates the port of the simulation.
+
+\input{tables/malicious-connection-summary.tex}
+
+\subsection{Inbound connections\label{sec:inbound}}
+
+Connections that no longer go to suspected spy nodes go to honest reachable nodes instead, and AS deduplication also moves connections from honest nodes in densely populated ASNs to honest nodes in sparsely populated ones (concern 4). Table \ref{table-inbound-summary} gives the distribution of inbound connections of honest reachable nodes, and Table \ref{table-inbound-by-asn-size} and Figure \ref{fig:inbound-by-k} split it by the number of honest reachable nodes in the node's AS. \ikSingleAsesPct{} percent of the ASes with honest reachable nodes contain only one. With AS deduplication every AS receives about the same share of inbound connections, which its nodes divide between them: a node receives about \inAloneAsmap{} inbound connections alone in its AS, \ikTwoAsmap{} with one other honest node, \ikThreeAsmap{} with two and \ikFourAsmap{} with three. With /24 deduplication most nodes receive about \inAloneSubnet{}. The \ikMoreNodes{} nodes (\ikMorePct{} percent) in ASes with up to \ikMoreMaxK{} honest nodes therefore receive more inbound connections than today, and the others fewer. Figure \ref{fig:inbound-share} shows where the inbound connections go. Nodes alone in their AS are \ishAloneNodes{} percent of honest reachable nodes; they receive \ishAloneMaster{} percent of all inbound connections with /24 deduplication and \ishAloneAsmap{} percent with AS deduplication. Nodes in ASes with ten or more honest nodes are \ishBigNodes{} percent of the nodes and receive \ishBigMaster{} percent and \ishBigAsmap{} percent. The live instances of Section \ref{sec:live} show the same shift on the real network: of their honest outbound peers, \lpAloneDefault{} percent were alone in their AS for default instances and \lpAloneAsmap{} percent for instances with \texttt{--asmap}, and \lpBigDefault{} and \lpBigAsmap{} percent were in ASes with ten or more honest nodes (\lpPeersDefault{} and \lpPeersAsmap{} peers; replication code: \texttt{live\_peer\_classes.py}). The live shift is smaller than simulated because real nodes choose from peer lists in which large-AS nodes are over-represented. The cause is the group draw: a node alone in its AS is drawn as often as a whole AS of hundreds of nodes. An adversary node alone in its AS is drawn as often too, which is the AS-distinct strategy analysed in Section \ref{sec:game}.
+
+\input{tables/inbound-summary.tex}
+
+\input{tables/inbound-by-asn-size.tex}
+
+\begin{figure}[H]
+\caption{Median inbound connections per honest reachable node, by the number of honest reachable nodes in its AS, October 2026, 90 percent unreachable nodes}
+\label{fig:inbound-by-k}
+\centering{}\includegraphics[scale=0.45]{images/inbound-by-k}
+\end{figure}
+
+\begin{figure}[H]
+\caption{Share of honest reachable nodes and share of their inbound connections, by the number of honest reachable nodes in the node's AS, October 2026, 90 percent unreachable nodes}
+\label{fig:inbound-share}
+\centering{}\includegraphics[scale=0.45]{images/inbound-share}
+\end{figure}
+
+
+\section{Protocol-adversary interaction as a game\label{sec:game}}
+
+The simulation above holds the adversary's behaviour fixed. As in Section 4 of \cite{Rucknium2025}, we now let the adversary respond, and ask under what conditions AS deduplication is better for honest nodes than /24 deduplication. We make the assumptions of \cite{Rucknium2025}: the privacy impact is the probability that a single draw selects an adversary node; costs are linear in the number of nodes; and the adversary uses one strategy at a time. In addition we assume that the adversary does not place nodes in groups that contain honest nodes, which is the adversary's best use of a node when every group costs the same and the adversary obtains less than about half of the draws (Appendix \ref{sec:appendix-shared}).
+
+The protocol chooses /24 deduplication ($24$) or AS deduplication ($A$). The adversary chooses between:
+\begin{itemize}
+\item \emph{bulk}: nodes in distinct /24 subnets inside few ASes, for example virtual servers from one cloud provider, at price $w_{24}$ per node and occupying $m$ ASNs;
+\item \emph{AS-distinct}: one node in each of many ASes, at price $w_{A}$ per node. Each such node is also in a distinct /24 subnet.
+\end{itemize}
+Let $H_{24}$ and $H_{A}$ be the numbers of distinct /24 subnets and ASNs that contain at least one honest reachable node, and $b$ the adversary's budget. Following the derivation of equations (1) and (2) of \cite{Rucknium2025}:
+\begin{align}
+p_{24,\mathrm{bulk}} &= \frac{b}{w_{24}H_{24}+b} & p_{24,\mathrm{AS}} &= \frac{b}{w_{A}H_{24}+b}\label{eq:p24}\\
+p_{A,\mathrm{bulk}} &\le \frac{m}{H_{A}+m} & p_{A,\mathrm{AS}} &= \frac{b}{w_{A}H_{A}+b}\label{eq:pA}
+\end{align}
+$p_{A,\mathrm{bulk}}$ does not depend on the budget: however many nodes the adversary puts in its $m$ ASes, they are $m$ groups.
+
+\begin{prop}
+Assume $w_{24} \le w_{A}$, so that the bulk strategy is the adversary's best response to /24 deduplication. The probability that a draw selects an adversary node is lower under AS deduplication against the AS-distinct strategy than under /24 deduplication against the bulk strategy, $p_{A,\mathrm{AS}} < p_{24,\mathrm{bulk}}$, if and only if
+\begin{equation}
+\frac{w_{A}}{w_{24}} > \frac{H_{24}}{H_{A}}.\label{eq:threshold}
+\end{equation}
+\end{prop}
+The proof is the same as for inequality (3) of \cite{Rucknium2025}. For a fixed price, AS deduplication is worse against the AS-distinct strategy than /24 deduplication is, $p_{A,\mathrm{AS}} > p_{24,\mathrm{AS}}$, because $H_{A} < H_{24}$. This is concern 2: honest nodes concentrated in a few server-provider ASes count as few groups, and each adversary node in its own AS counts as a full group. Inequality (\ref{eq:threshold}) quantifies it. With the October 2026 data $H_{24}/H_{A} = \hTwentyFourNew/\hAsnNew = \thresholdNew$, and with the May 2025 data $\hTwentyFourOld/\hAsnOld = \thresholdOld$. If the adversary can find as many distinct ASes as it has nodes, AS deduplication is the better default only if a node in a distinct AS costs about three and a half times as much as a node in a distinct /24 subnet. The price survey and Section \ref{sec:response} below show that the price condition fails, and that the number of available ASes is what limits the adversary.
+
+\subsection{Prices}
+
+\textbf{Bulk.} $w_{24}$ is low for the bulk strategy observed in October 2026. The cheapest virtual server of the provider that hosts \spyTopAsnPctNew{} percent of the suspected spy nodes, AS\spyTopAsnNew{}, costs USD 4.00 per month and includes a public IPv4 address \cite{DOPricing}. The \spyTopAsnNNew{} suspected spy nodes in that AS are in \spyTwentyFourNew{} distinct /24 subnets in total (Table \ref{table-concentration}), so distinct /24 subnets come at almost no premium.
+
+\textbf{Own ASN.} An adversary can register its own ASN, which costs EUR 50 per year at the RIPE NCC plus EUR 1,800 per year for an LIR account \cite{RIPE848}, and it must announce at least a /24 subnet, for which \cite{Rucknium2025} cites leasing prices of USD 118 to 250 per month. This is about thirty times the price of a USD 4 virtual server, well above the threshold (\ref{eq:threshold}).
+
+\textbf{Rented servers in other ASes.} The cheaper way to occupy a distinct AS is to rent a server from another hosting provider. Table \ref{table-prices} lists the cheapest plan with a public IPv4 address of \nPriceProviders{} hosting providers that host honest reachable Monero nodes in the October 2026 data, taken from their pricing pages \cite{PricePages,DOPricing}, with EUR prices converted at the European Central Bank reference rate \cite{ECB20261005}. They cover \nPriceAsns{} distinct ASNs, because one provider (Contabo) operates three regional ASNs. All \nPriceAsns{} cost between USD \priceMin{} and \priceMax{} per month, at most \priceMaxRatio{} times the USD 4.00 bulk price, far below the threshold of \thresholdNew. Price alone therefore does not protect AS deduplication: an adversary can obtain distinct ASes at nearly the bulk price. Pricing pages of some other providers that host honest nodes (Vultr, Akamai/Linode) refused automated access, and Hetzner's page renders its prices with JavaScript, so they are not in the table; Hetzner charges EUR 0.50 per month extra for a primary IPv4 address \cite{HetznerIPv4}.
+
+\input{tables/prices.tex}
+
+What limits the adversary is the \emph{number} of ASes in which it can rent servers. A spy node needs a public IPv4 address that accepts inbound connections, which in practice means a hosting provider rather than a residential network. The X4BNet community list of datacenter ASNs \cite{X4BDatacenter} contains \nDcList{} ASNs. Of the \hAsnNew{} ASNs with honest reachable nodes in October 2026, \nHonestDcAsn{} are on that list and hold \nHonestDcNodes{} of the \nHonestNew{} honest nodes; the other \nHonestNonDcAsn{} are mostly residential and access networks.
+
+\subsection{Simulated adversary response\label{sec:response}}
+
+The payoffs above use a single draw. To include the 12 outbound slots and the churn, the simulation of the previous section was repeated with the observed suspected spy nodes replaced by synthetic adversary fleets. Only the honest reachable nodes are simulated as originators; unreachable honest nodes would add originators with the same distribution of outbound connections.
+
+\textbf{Price premium.} The fleet is replaced by $\lfloor n_{\mathrm{spy}}\, w_{24}/w_{A} \rfloor$ nodes, each in its own new AS and /24 subnet, for price premiums $w_{A}/w_{24}$ of 1, 2, 3.46, 5 and 10, where $n_{\mathrm{spy}}$ is the number of suspected spy nodes in the dataset (Table \ref{table-response}; replication code: \texttt{response\_sim.R}). With no premium, the adversary obtains \respAsmapROneNew{} of 12 connections under AS deduplication, compared with \respSubnetROneNew{} under /24 deduplication (October 2026 data; May 2025: \respAsmapROneOld{} and \respSubnetROneOld{}). This confirms concern 1 under the assumption that the adversary can find as many distinct ASes as it has nodes.
+
+\input{tables/response.tex}
+
+\textbf{Limited supply of ASes.} The more realistic constraint is the number of rentable ASes, $K$. The fleet of \nSpyNew{} nodes, each in its own /24 subnet, is spread evenly over $K$ datacenter ASNs at an equal price per node, which Table \ref{table-prices} shows is approximately true for the cheapest providers. $K$ is set to the \nPriceAsns{} ASNs of Table \ref{table-prices}, to the \nHonestDcAsn{} datacenter ASNs that host honest reachable nodes, to all \nDcList{} listed datacenter ASNs, and to intermediate values made of the \nHonestDcAsn{} plus randomly chosen other listed ASNs (replication code: \texttt{supply\_sim.R}). Adversary nodes in an AS that also hosts honest nodes share that AS's group, as in the real network. Table \ref{table-supply} and Figure \ref{fig:supply} give the results. AS deduplication gives fewer connections to the adversary than /24 deduplication as long as the adversary can rent servers in fewer than about \kBreakEven{} ASes: \supAsmapKIX{} connections with $K=\nPriceAsns$, \supAsmapKXCIX{} with $K=\nHonestDcAsn$, against \supSubnetKIX{} with /24 deduplication. With $K=\nDcList$ the adversary obtains \supAsmapKCMXXXIII{} connections, more than with /24 deduplication. The break-even agrees with $k^{*}=\kStarNew{}$ from the single-draw model of Section \ref{sec:game}. Repeated with \beSeeds{} further random seeds on the four vantage machines, the break-even is \beMean{} ASes (standard deviation \beSd, range \beMin{} to \beMax). If a node in another AS costs more than a bulk node, the adversary can afford fewer nodes, but under AS deduplication only the number of ASes it occupies matters: with a price ratio of 1.5 and 1.75 the break-even, measured against the full bulk fleet under /24 deduplication, is \beRatioMid{} and \beRatioHigh{} ASes (replication code: \texttt{breakeven.R}).
+
+\input{tables/supply.tex}
+
+\begin{figure}[H]
+\caption{Adversary connections when the adversary spreads over $K$ rentable ASNs}
+\label{fig:supply}
+\centering{}\includegraphics[scale=0.45]{images/supply}
+\end{figure}
+
+\subsection{Opt-in}
+
+If few nodes use \texttt{--asmap}, the adversary's best response is to the protocol that most nodes use, /24 deduplication, so it keeps the bulk strategy. Nodes that opt in then face the observed fleet, against which AS deduplication gives \simNewAsmapEightyMean{} connections to suspected spy nodes out of 12, against \simNewSubnetEightyMean{} with /24 deduplication (Table \ref{table-malicious-connection-summary}). The other nodes are unaffected, apart from the change in inbound connections caused by the opted-in nodes. The result therefore supports AS deduplication as an opt-in option.
+
+The argument assumes that few nodes opt in. The MRL ban list is also opt-in, yet \banAdoptPct{} percent of honest reachable nodes block it: their sampled white lists contain no ban-listed address, against a median of \banAdoptOthersPct{} percent for the other nodes (replication code: \texttt{ban\_adoption.py}; the method cannot distinguish the MRL list from a DNS blocklist that covers the same addresses). Because each node selects its outbound peers by its own rule, the number of ASes the adversary needs to offset AS deduplication, about \kBreakEven{}, does not depend on how many nodes opt in, and nodes that do not opt in are unaffected. Adoption changes the adversary's gain from spreading. If as many nodes opted in as block the ban list, spreading would win back most of the connections that AS deduplication removes, and for those nodes opt-in would become the default case of Section \ref{sec:feasibility}. The crawler measures the number of ASes the adversary uses continuously \cite{Observatory}. A rise from the current \spyAsnNew{} ASes towards the hundreds would be the signal to advise nodes to turn the option off.
+
+\section{Can an adversary rent servers in about \kBreakEven{} ASes?\label{sec:feasibility}}
+
+Section \ref{sec:response} reduces the question of a default to one number: the number $K$ of distinct ASes in which an adversary can rent servers with inbound-reachable public IPv4 addresses. This section collects the available evidence and estimates $K$ with a sample survey.
+
+\subsection{What adversaries have done}
+
+Every suspected spy fleet observed so far uses few ASes. The MRL ban list \cite{MRLBanList}, version 2, covers \banAddresses{} IPv4 addresses in \banAsns{} ASNs. The fingerprint-flagged reachable nodes of October 2026 are \nSpyNew{} addresses in \spyAsnNew{} ASNs, \spyTopAsnPctNew{} percent of them in one. A peer-list poisoning pool observed by the crawler is hosted by one proxy provider (PEG Tech); all addresses gossiped from that provider's ASNs, \pegIps{} in total, fall in \pegAsns{} ASNs. The hosting provider is not necessarily the operator. These adversaries chose bulk strategies against the status quo and /24 deduplication, which is their best response to those rules (Section \ref{sec:game}). Their behaviour shows what is cheapest today, not what they could do if AS deduplication became the default.
+
+\subsection{Where outsiders run public servers}
+
+A lower bound on $K$ is the number of ASes in which people other than the network operator already run inbound-reachable servers. Three networks give such counts, with addresses mapped to ASNs by the same asmap:
+\begin{itemize}
+\item Tor relays with an IPv4 address \cite{Onionoo}: \torAses{} ASes, of which \torDc{} are on the X4BNet datacenter list \cite{X4BDatacenter}.
+\item Reachable Bitcoin nodes with an IPv4 address \cite{Bitnodes}: \btcAses{} ASes, of which \btcDc{} are on the list.
+\item Reachable Monero nodes in October 2026: \hAsnNew{} ASes, of which \nHonestDcAsn{} are on the list.
+\end{itemize}
+Together they cover \unionAses{} ASes, \unionDc{} of them on the datacenter list. The Monero crawler also records every address that peers gossip: since \crawlStart, the four vantage points saw \crawlIps{} distinct public IPv4 addresses in \crawlAsns{} ASNs, of which \crawlReachIps{} addresses in \crawlReachAsns{} ASNs were reachable \cite{Observatory}.
+
+The \unionDc{} datacenter-listed ASes are fewer than \kBreakEven, but the remaining \unionUnlisted{} ASes are not all residential. The datacenter list is community-maintained and incomplete: for example, AS40021 (Contabo's US network, Table \ref{table-prices}) and AS210083 (Privex), both of which host honest reachable Monero nodes, are not on it. Counting therefore does not decide whether $K$ exceeds \kBreakEven.
+
+\subsection{Survey of rentable ASes}
+
+$K$ was estimated by a random-sample survey of the \svFrame{} ASes that host public servers (replication code: \texttt{survey\_sample.py}, \texttt{survey\_fetch.py}, \texttt{survey\_verdicts.py}, \texttt{survey\_estimate.py}; saved copies of all pages in \texttt{data/survey/pages}).
+\begin{enumerate}
+\item A simple random sample of $n=\svn$ ASes was drawn with a fixed seed.
+\item Each AS was matched to its PeeringDB record (name, website and network type) \cite{PeeringDB} and to the bgp.tools tags ``Server Hosting'', ``DSL'' and ``Mobile'' \cite{BgpToolsTags}. bgp.tools defines Server Hosting as a network that ``provides commercial hosting, colocation, VPS, etc services (other people can buy machines and exit traffic from this network)'', which is the property that matters here.
+\item The website of each AS was fetched and searched, in several languages, for offers of virtual or dedicated servers and their monthly prices. Where a site blocked automated access, a third-party listing was used and marked as secondary evidence.
+\item Each AS was classified as \emph{rentable} if it carries the Server Hosting tag or a server offer was found, \emph{not rentable} if it carries only access-network tags or is registered as a residential, education, research or media network and no server offer was found, and \emph{unknown} otherwise. Found evidence overrides tags.
+\end{enumerate}
+
+Of the \svn{} sampled ASes, \svR{} are rentable, \svN{} are not rentable and \svU{} are unknown (Appendix \ref{sec:appendix-survey}). Table \ref{table-survey-rentable} lists the rentable ones. A price was found for \svPriced{} of them, and \svCheap{} of those cost USD 7 per month or less, the range of Table \ref{table-prices}; for \svCheapV{} of the \svCheap{} the page states that an IPv4 address is included or gives its price. Prices in other currencies were converted at official reference rates \cite{FXRates,ECB20261005}.
+
+\input{tables/survey-rentable.tex}
+
+With 95 percent Wilson confidence intervals, scaled to the \svFrame{} ASes of the frame:
+\begin{itemize}
+\item rentable ASes: \svKR{} (\svKRLoLo{} to \svKRHiHi{}); \svKRU{} (\svKRULoLo{} to \svKRUHiHi{}) if every unknown AS is rentable;
+\item ASes confirmed rentable at USD 7 per month or less: \svKCheap{} (\svKCheapLoLo{} to \svKCheapHiHi{}), of which \svKCheapV{} (\svKCheapVLoLo{} to \svKCheapVHiHi{}) with an IPv4 address stated in the price.
+\end{itemize}
+The second estimate is a lower bound: a price was found for only \svPriced{} of the \svR{} rentable ASes in the sample, and \svCheap{} of those \svPriced{} are cheap. The global estimate assumes that every AS with the Server Hosting tag is rentable. Because tagged ASes were classified as rentable by rule, the survey does not test this assumption; for \svPriced{} of the tagged or otherwise rentable ASes a priced offer was found.
+
+The frame contains only ASes in which Tor, Bitcoin or Monero servers already run, and an adversary is not limited to them. bgp.tools tags \svVpshTotal{} ASes as Server Hosting. In the sample the tag identified \svTaggedinSample{} of the \svR{} rentable ASes, a recall of \svTagRecall, which suggests that about \svKGlobalHosting{} ASes offer server hosting worldwide.
+
+\textbf{Result.} The number of ASes in which servers can be rented is larger than the break-even of about \kBreakEven{}: \svKR{} (\svKRLoLo{} to \svKRHiHi) within the frame alone and about \svKGlobalHosting{} worldwide. The number confirmed to be as cheap as the bulk strategy is lower, \svKCheap{} within the frame, but that is a lower bound and \svCheap{} of the \svPriced{} rentable ASes with a price were that cheap. Price and supply therefore do not appear to prevent an adversary from spreading over more than \kBreakEven{} ASes. The constraints that remain are operational: an adversary that uses \kBreakEven{} providers manages \kBreakEven{} accounts, payment methods and abuse desks, and each provider can suspend its servers. These costs are not measured here.
+
+\section{A complementary defence: AS-diverse Dandelion++ stems\label{sec:stem}}
+
+The privacy loss that spy nodes cause is concentrated in the stem phase of Dandelion++, in which a node forwards its own transactions to one of its stem peers \cite{Fanti2018a}. Monero chooses \texttt{CRYPTONOTE\_DANDELIONPP\_STEMS} $=2$ stems per epoch uniformly at random, without replacement, from the node's outbound connections (\texttt{connection\_map} in \texttt{src/net/dandelionpp.cpp}). We consider a change to the stem choice only: draw the stems uniformly over the \emph{ASes} of the outbound connections, then a connection uniformly within the AS. Outbound peer selection, and therefore the network graph and inbound load, are unchanged.
+
+Against a bulk fleet, the connections that a node has to the fleet's few ASes collapse into few stem candidates. Against an adversary with one node per AS, every adversary connection remains its own candidate, and only honest connections that share an AS are merged, so the adversary gains little. Table \ref{table-stem} gives the probability that a stem is an adversary node, computed exactly for each honest reachable node from its simulated outbound connections (replication code: \texttt{stem\_sim.R}). With /24 deduplication and the observed suspected spy nodes it falls from \stemObsCur{} to \stemObsDiv{} percent per stem, and the probability that either of the two stems is an adversary node falls from \stemObsAnyCur{} to \stemObsAnyDiv{} percent. For a node that does not use the ban list it falls from \stemBanCur{} to \stemBanDiv{} percent, and for the May 2025 data from \stemOldCur{} to \stemOldDiv{} percent. Against one adversary node per AS (\nSpyNew{} ASes, none shared with honest nodes), the worst case for every rule considered here, it rises from \stemWorstCur{} to \stemWorstDiv{} percent.
+
+\input{tables/stem.tex}
+
+Figure \ref{fig:stem-spread} shows how quickly each rule loses its advantage as the adversary spreads. AS-diverse stems lose theirs early: spread over the \nHonestDcAsn{} datacenter ASes that host honest nodes, the adversary already obtains \stemNineNineDiv{} percent per stem, and further spreading adds less than one percentage point. AS deduplication of outbound connections keeps its advantage longer (\stemNineNineAsmap{} percent at \nHonestDcAsn{} ASes) but loses it at about \kBreakEven{} ASes (\stemThreeSeventyAsmap{} percent) and keeps deteriorating, to \stemWorstAsmap{} percent. No rule considered here is better than the current one against every adversary placement: a rule that trusts AS diversity tells the adversary which placement it trusts. The rules differ in what they lose in their worst case. AS-diverse stems lose at most \stemRegretDiv{} percentage points against the current rule and gain \stemObsGain{} against the observed fleet; AS deduplication of outbound connections has no comparable bound.
+
+\begin{figure}[H]
+\caption{Probability that a Dandelion++ stem is an adversary node as the adversary spreads its nodes over more ASes, October 2026}
+\label{fig:stem-spread}
+\centering{}\includegraphics[scale=0.45]{images/stem-spread}
+\end{figure}
+
+The trade-off can be tuned by weighting each connection by $n^{-\alpha}$, where $n$ is the number of the node's outbound connections in the same AS: $\alpha=0$ is the current rule and $\alpha=1$ the AS-diverse rule (Table \ref{table-stem-alpha}). The worst-case cost grows slowly with $\alpha$ and the benefit against the observed fleet quickly: with $\alpha=0.5$ the stem exposure is \stemObsAlpha{} percent against the observed fleet and \stemWorstAlpha{} percent in the worst case, at most \stemRegretAlpha{} percentage points above the current rule.
+
+\input{tables/stem-alpha.tex}
+
+\textbf{Stem load.} AS-diverse stems move stem traffic towards honest nodes that are alone in their AS, the stem counterpart of concern 4. Table \ref{table-stemload} gives the expected stem traffic each honest reachable node receives. Against the observed suspected spy nodes the median rises from \loadMedCur{} to \loadMedDiv, partly because traffic that went to spy nodes now goes to honest ones; the maximum rises from \loadMaxCur{} to \loadMaxDiv, the Gini coefficient from \loadGiniCur{} to \loadGiniDiv, and nodes alone in their AS receive \loadAloneDiv{} instead of \loadAloneCur. The concentration is moderate compared with the inbound concentration of AS deduplication of outbound connections (Section \ref{sec:inbound}).
+
+\input{tables/stemload.tex}
+
+\textbf{Adversaries aimed at the stem rule.} An adversary that knows the stem rule might place its nodes in the ASes that hold the most honest nodes, so that honest connections are merged with its own. With the observed fleet size, concentrating in the 10 or 30 largest honest ASes, or copying the honest AS distribution, gives \stemTopTenDiv{}, \stemTopThirtyDiv{} and \stemMimicDiv{} percent per stem (Table \ref{table-stem}), all below the one-node-per-AS case of \stemWorstDiv{} percent.
+
+AS-diverse stems are not part of pull request \#11474. They need the asmap but no change to peer selection, so they could be used with /24 deduplication by every node that loads the map. Their effect on the anonymity guarantees of Dandelion++, which assume random stem choice among outbound connections, should be reviewed before they are adopted.
+
+\section{Selection from real peer lists\label{sec:peerlists}}
+
+The simulations above follow \cite{Rucknium2025} in letting every node choose from all reachable nodes. Real nodes choose from a white list of at most 1,000 and a gray list of at most 5,000 addresses, built from the peer lists of their neighbours, and prefer recently seen white-list entries. That model predicted 30.8 percent of outbound connections to suspected spy nodes for the status quo in May 2025 \cite{Rucknium2025}, while \cite{Kopyciok2026} measured 6.69 to 7.78 percent on default nodes in June 2025. Absolute shares from the uniform model are therefore probably too high.
+
+To use real candidate pools, each of the \plNodes{} honest reachable nodes that completed a handshake was asked four times, from the four vantage points, for its peer list; each response is a random sample of up to 250 white-list entries (replication code: \texttt{pl\_crawl.py}). On average \plListSpy{} percent of a node's entries are suspected spy nodes or reachable ban-listed nodes, close to the 16.22 percent of peer-list entries that \cite{Kopyciok2026} attribute to one AS; \plUnknown{} percent are addresses not known to be reachable, which are treated as failed connection attempts. Each node then selects outbound connections from its own list with the algorithm of \texttt{make\_new\_connection\_from\_peerlist()}: deduplication by group, sorting by \texttt{last\_seen}, the first 20 untried candidates, and the cubic preference for recent entries of \texttt{get\_random\_index\_with\_fixed\_probability()} (replication code: \texttt{pl\_sim.py}). Only the white list is modelled; monerod draws about 70 percent of outbound connections from it (\texttt{P2P\_DEFAULT\_WHITELIST\_CONNECTIONS\_PERCENT}).
+
+Table \ref{table-peerlists} gives the results. With /24 deduplication and no ban list, \plSubnetObs{} of 12 outbound connections go to suspected spy nodes, fewer than in the uniform model, and AS deduplication reduces this to \plAsmapObs. In the spread case the same list entries are relabelled so that every adversary node is in its own AS, the most favourable placement for the adversary; AS deduplication then gives \plAsmapSpr{} connections against \plSubnetSpr{} with /24 deduplication, a smaller penalty than in the uniform model.
+
+\textbf{AS-aware peer lists.} Peer-list poisoning is the mechanism that gives the adversary its share of candidates \cite{Kopyciok2026}, who suggest pruning duplicated subnets or ASes from peer lists. Bitcoin Core applies the asmap to the same problem: it uses the AS to place addresses in its address manager's buckets, which limits the share of the address table that one AS can occupy \cite{BitcoinPR16702}. Monero's white and gray lists have no such limit. Capping each AS at 3.1 percent of a node's list, the fraction of Bitcoin's tried table that one group can occupy (8 of 256 buckets \cite{BitcoinAddrman}), with /24 deduplication otherwise unchanged, reduces the connections to the observed suspected spy nodes from \plSubnetObs{} to \plCapThreeObs, and a 1 percent cap to \plCapOneObs. Against the spread case the cap gives \plCapThreeSpr{} and \plCapOneSpr{} connections, against \plSubnetSpr, because capping the large honest ASes raises the adversary's share of what remains. The cap is applied here to a static list; a cap applied when entries are inserted, as in Bitcoin, may behave differently and should be simulated with list dynamics.
+
+\input{tables/peerlists.tex}
+
+\section{Live measurement on the Monero network\label{sec:live}}
+
+All results so far are simulations. To measure the effect directly, unmodified \texttt{monerod} instances built from pull request \#11474 were run with \texttt{--no-sync}, 12 outbound and no inbound connections, and no ban list, on the \abBoxes{} vantage machines: \abInst{} instances with \texttt{--asmap=embedded} and \abInst{} without, three of each per machine (replication code: \texttt{ab\_start\_any.sh}, \texttt{ab\_poll.py}, \texttt{ab\_analyze.py}). Their outbound connections were recorded every 5 minutes and classified with the October 2026 suspected spy set and the reachable ban-listed nodes. This is the configuration of the default nodes measured by \cite{Kopyciok2026}.
+
+After \abHours{} hours, the default instances had \abCtrlPct{} percent of their outbound connections (\abCtrlTwelve{} of 12) to suspected spy nodes, and the instances with \texttt{--asmap} had \abAsmapPct{} percent (\abAsmapTwelve{} of 12). The default instances' peers came from \abCtrlAsns{} distinct ASes on average, the asmap instances' from \abAsmapAsns. With AS-diverse stems, the default instances' stem exposure would have been \abCtrlStemDiv{} percent; this is computed from their recorded connections, not measured on nodes that use the rule.
+
+Outbound connections of a node that does not sync change little: each instance had between \abPeersMin{} and \abPeersMax{} distinct outbound peers over the whole run. The snapshots of one instance are therefore not independent, and the unit of comparison is the instance. Between instances the default share ranged from \abCtrlMin{} to \abCtrlMax{} percent and the asmap share from \abAsmapMin{} to \abAsmapMax{} percent; every default instance had a higher share than every asmap instance (exact one-sided Wilcoxon rank-sum test over instance means, $p=\abRankP$). The default share is closer to the uniform model than to the real-peer-list simulation and higher than the 7.78 percent that \cite{Kopyciok2026} measured in June 2025; the two measurements classify different sets of suspected spy nodes, sixteen months apart.
+
+\section{Related work\label{sec:related}}
+
+\textbf{Eclipse attacks.} Bitcoin Core's asmap and address-manager bucketing respond to eclipse attacks that fill a node's address tables \cite{Heilman2015,Tran2020,BitcoinPR16702}. Shi et al. eclipsed Monero nodes by populating their gray and white lists from many addresses and then forcing them to drop benign connections \cite{Shi2025}. Their countermeasures include ignoring peer lists from incoming connections and limiting the records one connection can insert; the AS cap of Section \ref{sec:peerlists} limits what one AS can insert instead. The double-spend form of their connection reset was fixed in v0.18.3.2 (pull request \#9218, as reported in \cite{Shi2025}).
+
+\textbf{Measurement of the Monero network.} Cao et al. measured Monero's peer-to-peer network and its peer lists \cite{Cao2020}. Kopyciok, Schmid and Victor detected anomalous peers from five vantage nodes in June 2025 and attributed a self-promoting Sybil cluster to one AS \cite{Kopyciok2026}.
+
+\textbf{Anonymity of Dandelion++.} Sharma, Gosain and Diaz model Dandelion and Dandelion++ with Bayesian inference and find that an adversary controlling 20 percent of nodes intercepts a similar fraction of transactions in Dandelion++ as in Dandelion, with a median anonymity set equivalent to about 32 possible originators \cite{Sharma2022}. The adversary's share of stem relays, Section \ref{sec:stem}, is therefore the measure that matters for privacy.
+
+
+\textbf{Comparison with published measurements.} Table \ref{table-comparison} sets this note's measurements beside the published ones. The fleet's share of peer-list entries agrees with \cite{Kopyciok2026}. The fleet now in AS\spyTopAsnNew{} is of similar size to the one they observed in AS54098, which filled seven /24 subnets, but it is spread over \spyTwentyFourNew{} /24 subnets, which /24 deduplication does not limit.
+
+\input{tables/comparison.tex}
+
+\section{A hybrid rule\label{sec:hybrid}}
+
+/24 deduplication fails against the bulk strategy and AS deduplication against the AS-distinct strategy. A hybrid rule keeps /24 deduplication and in addition refuses an outbound candidate whose ASN already has an outbound connection, the per-AS connection limit proposed in Monero issue \#7090 \cite{MoneroIssue7090}. It is not part of pull request \#11474. Against the observed fleet it performs between the two rules (\simNewHybridEightyMean{} connections out of 12, Table \ref{table-malicious-connection-summary}). Against an adversary spread over many ASes it performs \emph{worse} than /24 deduplication: \supHybridKXCIX{} connections with $K=\nHonestDcAsn$ and \supHybridKCMXXXIII{} with $K=\nDcList$, against \supSubnetKIX{} (Table \ref{table-supply}). After an honest node connects to a large honest AS, the hybrid rule excludes all /24 subnets of that AS from later draws, while the adversary's /24 subnets elsewhere remain. The hybrid rule is therefore not a candidate for a default.
+
+\section{Conclusions}
+
+\begin{enumerate}
+\item Against the suspected spy nodes observed in October 2026, AS deduplication reduces outbound connections to them from \simNewSubnetEightyMean{} to \simNewAsmapEightyMean{} out of 12 in simulation, and from \abCtrlPct{} to \abAsmapPct{} percent on live nodes. As an opt-in option it gives this benefit without giving the adversary a reason to change strategy while few nodes use it. At the adoption of the ban list, \banAdoptPct{} percent of reachable nodes, the adversary would have that reason, so the adversary's AS count should be monitored.
+\item As a default, AS deduplication is better than /24 deduplication only if the adversary cannot rent servers in more than about \kBreakEven{} ASes. Price does not prevent this, and an estimated \svKR{} (\svKRLoLo{} to \svKRHiHi) ASes within the survey frame, and about \svKGlobalHosting{} worldwide, rent servers. The evidence does not support AS deduplication as the default.
+\item AS deduplication concentrates inbound connections on honest nodes alone in their AS: they are \ishAloneNodes{} percent of honest reachable nodes and would receive \ishAloneMaster{} percent of inbound connections today but \ishAloneAsmap{} percent with AS deduplication.
+\item AS-diverse Dandelion++ stems, with /24 deduplication unchanged, reduce stem exposure from \stemObsCur{} to \stemObsDiv{} percent (real peer lists: \plStemCurObs{} to \plStemDivObs). Their advantage disappears once the adversary spreads over about \nHonestDcAsn{} ASes, but their worst-case loss is \stemRegretDiv{} percentage points (\stemRegretAlpha{} with $\alpha=0.5$). No rule considered is better than the current one against every placement; this one has the smallest worst-case loss among those that help against the observed fleet. It is the candidate for a default, subject to review of its effect on the Dandelion++ anonymity analysis.
+\item An AS cap on peer-list entries reduces connections to the observed fleet the most (\plSubnetObs{} to \plCapThreeObs{} of 12), but like AS deduplication it loses against a spread adversary (\plCapThreeSpr{} against \plSubnetSpr). It needs a simulation with peer-list dynamics.
+\item The uniform candidate model of \cite{Rucknium2025} gives higher absolute shares than real peer lists; the ranking of the rules is the same in both.
+\item A hybrid of /24 deduplication and a per-AS connection limit is worse than /24 deduplication against a spread adversary.
+\item \banReachPct{} percent of the gossiped MRL ban-list addresses are reachable, in \banTwentyFour{} /24 subnets, so /24 deduplication already limits them.
+\end{enumerate}
+
+\section{Limitations and further research}
+
+\begin{itemize}
+\item The survey of rentable ASes classifies \svU{} of \svn{} sampled ASes as unknown and finds prices for \svPriced{} of \svR{} rentable ones; the operational cost of using hundreds of providers is not measured.
+\item The suspected spy classification of the October 2026 data is withheld; the May 2025 data reproduce the network simulations and the price-premium response with public data.
+\item The real-peer-list simulation models only the white list, treats entries not known to be reachable as failed attempts, applies the AS cap to a static list, and models the spread adversary by relabelling the observed list entries.
+\item The single-draw model ignores drawing without replacement and the fixed-probability preference for recently seen white list peers; the simulation ignores peer list size limits and treats every reachable node as equally likely to be in a peer list, as in \cite{Rucknium2025}.
+\item The supply-constrained simulation spreads adversary nodes evenly over the ASes; price ratios up to 1.75 were simulated. The stem analysis assumes the adversary does not adapt its strategy to the stem rule beyond the strategies simulated.
+\item The asmap is refreshed when Monero releases. New prefixes are attributed to a neighbouring AS in the filled map until the next refresh \cite{AsmapData}.
+\item The live measurement has \abInst{} instances per arm on four machines in three hosting providers' networks (OVH, Hetzner and Oracle Cloud), without inbound connections, over less than one day; outbound peers changed little during the run.
+\item AS-diverse stems were evaluated by simulation and by computation from recorded connections, not on nodes that implement the rule. Stem exposure is the probability for the first stem hop; multi-hop stem paths and the resulting anonymity set \cite{Sharma2022} are not modelled.
+\item IPv6 and anonymity networks are not analyzed.
+\end{itemize}
+
+\section*{Code and data}
+
+A replication package contains all code and maps every table, figure and number to its script. The October 2026 data, from the Monero P2P Observatory crawl \cite{Observatory} and the live runs, are included with IP addresses replaced by keyed hashes and subnets by order-preserving labels; with them, the stem, peer-list and live analyses reproduce this note's results exactly. Raw crawl records and the fingerprint classifier are available to the Monero Research Lab on request.
+
+\section*{Acknowledgements}
+
+The simulation, game-theoretic model and May 2025 data are Rucknium's \cite{Rucknium2025,xmrpeers}. /24 deduplication was implemented by rbrunner7 \cite{MoneroPR9939}, a per-AS connection limit for Monero was proposed by keffnet \cite{MoneroIssue7090} and AS grouping was first implemented by Malinero \cite{MoneroPR7935}, and the asmap data are produced by the \texttt{bitcoin-core/asmap-data} contributors \cite{AsmapData}.
+
+\begin{singlespace}
+\bibliographystyle{apalike}
+\addcontentsline{toc}{section}{\refname}\bibliography{references}
+\end{singlespace}
+
+\appendix
+
+\section{Equivalence of the deduplicated draw\label{sec:appendix-draw}}
+
+Let $G$ be the set of groups that are not already connected and $n_{g}$ the number of candidates in group $g \in G$. After a uniform shuffle, the first candidate of group $g$ is each of its $n_{g}$ members with probability $1/n_{g}$. After deduplication there are $|G|$ candidates, one per group, and a uniform pick selects each with probability $1/|G|$. A given candidate $i$ in group $g$ is therefore selected with probability $1/(|G|\, n_{g})$, which is the probability of choosing $g$ uniformly from $G$ and then $i$ uniformly from $g$. The probability that the draw selects an adversary node is $\frac{1}{|G|}\sum_{g\in G} s_{g}$, where $s_{g}$ is the share of adversary nodes in group $g$; it depends on the number of groups, not on their sizes.
+
+Numerically, with three random peers already connected and 15,000 draws for each of three random seeds, the literal draw of \texttt{gen.network()} and the group-then-member draw gave adversary shares within two standard errors of this analytical value for both datasets and both groupings (replication code: \texttt{check.equivalence()} in \texttt{sim.R}).
+
+\section{Adversary nodes in groups with honest nodes\label{sec:appendix-shared}}
+
+Let $S=\sum_{g\in G}s_{g}$, so that the probability that a draw selects an adversary node is $S/|G|$ (Appendix \ref{sec:appendix-draw}). An adversary node placed in a group with $h \ge 1$ honest nodes and $x$ adversary nodes raises $s_{g}$ by $\delta = h/((x+h)(x+h+1)) \le 1/2$ and leaves $|G|$ unchanged. The same node in a new group raises $S$ by one and $|G|$ by one. The new group is at least as good for the adversary if $(S+1)/(|G|+1) \ge (S+\delta)/|G|$, that is if $|G|(1-\delta) \ge S+\delta$, which holds for every $\delta \le 1/2$ when $S/|G| \le 1/2 - 1/(2|G|)$. While the adversary obtains less than about half of the draws and every group costs the same, it therefore does best by placing nodes in new groups, and the payoffs (\ref{eq:p24})--(\ref{eq:pA}) are the relevant ones.
+
+\section{Network centrality\label{sec:appendix-centrality}}
+
+The centrality statistics of the simulated networks, as reported in \cite{Rucknium2025}, are given below.
+
+\input{tables/network-stats.tex}
+
+\section{Survey sample\label{sec:appendix-survey}}
+
+\input{tables/survey-full.tex}
+
+\end{document}

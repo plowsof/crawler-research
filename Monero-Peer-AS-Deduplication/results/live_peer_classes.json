@@ -1,0 +1,20 @@
+{
+ "default": {
+  "honest_peers": 92,
+  "instances": 12,
+  "share_pct": {
+   "AS with 10+ honest nodes": 53.3,
+   "AS with 2-9 honest nodes": 35.9,
+   "Alone in its AS": 10.9
+  }
+ },
+ "asmap": {
+  "honest_peers": 132,
+  "instances": 12,
+  "share_pct": {
+   "AS with 2-9 honest nodes": 41.7,
+   "AS with 10+ honest nodes": 12.9,
+   "Alone in its AS": 45.5
+  }
+ }
+}

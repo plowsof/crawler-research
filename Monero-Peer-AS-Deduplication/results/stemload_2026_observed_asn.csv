@@ -1,0 +1,2 @@
+dataset,scenario,grouping,cur.median,cur.p99,cur.max,cur.gini,div.median,div.p99,div.max,div.gini,cur.alone,div.alone,cur.big,div.big
+2026,observed,asn,1,5.75,6.49999999999999,0.547876855598676,1,5.75,6.49999999999999,0.547876855598676,4.61811391223156,4.61811391223156,0.197185325743201,0.197185325743201

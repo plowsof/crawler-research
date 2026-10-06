@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Obenet" />
+    <meta name="keywords" content="bredband, internet, wifi, tv, telefoni, företag, privat, stadsnät, fiber" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- The address search and the order flow call api.obe.net from the
+         browser; open the connection at page load so the first suggestion
+         does not pay the TLS handshake. crossorigin because fetch() uses the
+         anonymous connection pool. -->
+    <link rel="preconnect" href="https://api.obe.net" crossorigin />
+
+    <!-- News feed autodiscovery -->
+    <link rel="alternate" type="application/rss+xml" title="Obenet Nyheter (RSS)" href="/nyheter/feed.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Obenet Nyheter (Atom)" href="/nyheter/feed.atom" />
+    <link rel="alternate" type="application/feed+json" title="Obenet Nyheter (JSON Feed)" href="/nyheter/feed.json" />
+
+    <!--
+      Everything between the markers below is replaced per page:
+        - at build time by scripts/prerender-meta.mjs, for static routes
+        - at request time by feed-server, for news articles and events
+      The defaults here are the Swedish home page, which is what any route
+      without a prerendered file falls back to. Edit scripts/seo.mjs to change
+      the tag set, not this block.
+    -->
+    <!-- seo:start -->
+    <title>Enkelt och kraftfullt bredband - Obenet</title>
+    <meta name="description" content="Snabbt och pålitligt bredband för privatpersoner och företag. Enkelt, smidigt och krångelfritt via vårt blixtsnabba backbone." />
+    <link rel="canonical" href="https://www.obe.net" />
+    <link rel="alternate" hreflang="sv" href="https://www.obe.net" />
+    <link rel="alternate" hreflang="en" href="https://www.obe.net/en" />
+    <link rel="alternate" hreflang="x-default" href="https://www.obe.net" />
+    <meta property="og:site_name" content="Obenet" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Enkelt och kraftfullt bredband - Obenet" />
+    <meta property="og:description" content="Snabbt och pålitligt bredband för privatpersoner och företag. Enkelt, smidigt och krångelfritt via vårt blixtsnabba backbone." />
+    <meta property="og:url" content="https://www.obe.net" />
+    <meta property="og:locale" content="sv_SE" />
+    <meta property="og:locale:alternate" content="en_GB" />
+    <meta property="og:image" content="https://www.obe.net/og-default.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Obenet" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Enkelt och kraftfullt bredband - Obenet" />
+    <meta name="twitter:description" content="Snabbt och pålitligt bredband för privatpersoner och företag. Enkelt, smidigt och krångelfritt via vårt blixtsnabba backbone." />
+    <meta name="twitter:image" content="https://www.obe.net/og-default.png" />
+<!-- seo:end -->
+    <script type="module" crossorigin src="/assets/index-CX403tDH.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-CkpWlKXn.js">
+    <link rel="modulepreload" crossorigin href="/assets/i18n-BC-0H2qi.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-Bq7WCFkL.css">
+  </head>
+
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

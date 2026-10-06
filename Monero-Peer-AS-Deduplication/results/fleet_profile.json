@@ -1,0 +1,43 @@
+{
+ "tip_height": 3777590,
+ "suspected_AS14061": {
+  "nodes_with_handshake": 1279,
+  "default_port_pct": 100.0,
+  "distinct_peer_ids": 1279,
+  "peer_ids_shared_by_2plus_ips": 0,
+  "top_version_mode": 16,
+  "within_10_blocks_of_tip_pct": 99.7,
+  "pruned_pct": 0.2,
+  "rpc_port_advertised_pct": 99.7
+ },
+ "suspected_other": {
+  "nodes_with_handshake": 14,
+  "default_port_pct": 100.0,
+  "distinct_peer_ids": 14,
+  "peer_ids_shared_by_2plus_ips": 0,
+  "top_version_mode": 16,
+  "within_10_blocks_of_tip_pct": 30.0,
+  "pruned_pct": 10.0,
+  "rpc_port_advertised_pct": 50.0
+ },
+ "honest_AS14061": {
+  "nodes_with_handshake": 571,
+  "default_port_pct": 99.8,
+  "distinct_peer_ids": 439,
+  "peer_ids_shared_by_2plus_ips": 132,
+  "top_version_mode": 16,
+  "within_10_blocks_of_tip_pct": 100.0,
+  "pruned_pct": 16.7,
+  "rpc_port_advertised_pct": 98.6
+ },
+ "honest_all": {
+  "nodes_with_handshake": 2690,
+  "default_port_pct": 97.6,
+  "distinct_peer_ids": 2507,
+  "peer_ids_shared_by_2plus_ips": 182,
+  "top_version_mode": 16,
+  "within_10_blocks_of_tip_pct": 97.1,
+  "pruned_pct": 33.0,
+  "rpc_port_advertised_pct": 59.4
+ }
+}

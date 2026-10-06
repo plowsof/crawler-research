@@ -1,0 +1,33 @@
+\begin{table}[t]
+\caption{
+{\fontsize{20}{25}\selectfont  Dandelion++ stem exposure: percent probability that a stem is an adversary node\small } \\ 
+{\fontsize{14}{17}\selectfont  Stem: current = 2 stems uniformly from the outbound connections (src/net/dandelionpp.cpp). AS-diverse = stems drawn uniformly over the ASes of the outbound connections\small }
+} 
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lllrrr}
+\toprule
+Data & Adversary & Outbound & Spy/12 & Stem cur. & Stem AS-div. \\ 
+\midrule\addlinespace[2.5pt]
+Oct 2026 & Observed & AS & 0.1 & 1.1 & 1.1 \\ 
+Oct 2026 & Observed & /24 & 4.4 & 36.5 & 12.3 \\ 
+Oct 2026 & Observed + ban-list nodes & AS & 0.2 & 1.3 & 1.3 \\ 
+Oct 2026 & Observed + ban-list nodes & /24 & 4.5 & 37.5 & 13.9 \\ 
+Oct 2026 & Spread, 99 ASes & AS & 1.6 & 13.4 & 13.4 \\ 
+Oct 2026 & Spread, 99 ASes & /24 & 4.7 & 39.2 & 41.9 \\ 
+Oct 2026 & Spread, 370 ASes & AS & 4.8 & 39.7 & 39.7 \\ 
+Oct 2026 & Spread, 370 ASes & /24 & 4.7 & 39.2 & 42.3 \\ 
+Oct 2026 & Spread, 933 ASes & AS & 7.5 & 62.4 & 62.4 \\ 
+Oct 2026 & Spread, 933 ASes & /24 & 4.7 & 39.2 & 42.4 \\ 
+Oct 2026 & One node per AS & AS & 8.3 & 69.3 & 69.3 \\ 
+Oct 2026 & One node per AS & /24 & 4.7 & 39.2 & 42.5 \\ 
+Oct 2026 & 10 largest honest ASes & AS & 0.1 & 1.1 & 1.1 \\ 
+Oct 2026 & 10 largest honest ASes & /24 & 4.7 & 39.2 & 36.7 \\ 
+Oct 2026 & 30 largest honest ASes & AS & 0.4 & 3.2 & 3.2 \\ 
+Oct 2026 & 30 largest honest ASes & /24 & 4.7 & 39.2 & 40.4 \\ 
+Oct 2026 & Honest AS distribution & AS & 2.7 & 22.8 & 22.8 \\ 
+Oct 2026 & Honest AS distribution & /24 & 4.7 & 39.2 & 38.0 \\ 
+May 2025 & Observed & AS & 0.1 & 0.8 & 0.8 \\ 
+May 2025 & Observed & /24 & 1.1 & 8.8 & 6.2 \\ 
+\bottomrule
+\end{tabular*}
+\label{table-stem}
+\end{table}
