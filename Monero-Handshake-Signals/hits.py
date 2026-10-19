@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Published-signal hits per vantage point from probe.jsonl.gz files.
 usage: hits.py <box>/probe.jsonl.gz ... > hits.json
-S1 = any non-zero last_seen in the handshake peer list (stock monerod zeroes it).
+S1 = last_seen present in the handshake peer list, any value (stock monerod never sends it).
 S3 = full 250-entry list spanning < 10 distinct /24s (< 0.04 diversity, Kopyciok et al.).
 "consistent" = hit at every vantage that got a (full, for S3) answer from that IP."""
 import sys, json, gzip, os, collections
@@ -14,7 +14,7 @@ for fn in sys.argv[1:]:
         r = json.loads(l); tried += 1
         if "peers" not in r: continue
         ans += 1; ip = r["ip"]
-        hit1 = any(p[3] for p in r["peers"])
+        hit1 = any(p[3] is not None for p in r["peers"])
         per["S1"][ip][0] += hit1; per["S1"][ip][1] += 1
         if hit1: s1.add(ip)
         if len(r["peers"]) == 250:

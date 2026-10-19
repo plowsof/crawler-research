@@ -9,7 +9,7 @@ so a single machine is enough and no monerod is needed. Daily counts are on the
 
 | Signal | Rule | Why it is anomalous |
 |---|---|---|
-| S1 `last_seen` | any non-zero `last_seen` in the handshake peer list | stock monerod zeroes it before sending (`net_node.inl`) and zero values are not serialised |
+| S1 `last_seen` | `last_seen` present in the handshake peer list, any value (including 0) | stock monerod zeroes it before sending (`net_node.inl`) and `KV_SERIALIZE_OPT` omits zero, so it never appears |
 | S3 diversity | a full 250-entry list spanning < 10 distinct /24s | stock monerod samples its white list; a list this concentrated is not one |
 
 ## Files
@@ -21,6 +21,7 @@ so a single machine is enough and no monerod is needed. Daily counts are on the
 | `ruckcap.py` | `ffprobe.py` run that also logs each attempt's (source port, ip, port) |
 | `ruckcap.sh` | full-payload `tcpdump` + `ruckcap.py` + `pcapcut.py`, one vantage point |
 | `pcapcut.py` | cuts a capture down to the probe's own flows |
+| `pcap2probe.py` | rebuilds `probe.jsonl` from a capture (reassembles and decodes each handshake response) |
 | `hits.py` | S1 / S3 hits per vantage point, plus the IPs every vantage agrees on |
 
 ## Run

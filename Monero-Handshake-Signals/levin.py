@@ -111,7 +111,8 @@ def connect(host, port, timeout):
     return s
 
 def handshake(host, port, timeout=10):
-    """Returns dict: peer_id, height, my_port, rpc_port, support_flags, pruning_seed, peers[list of (kind, ip, port, last_seen, id)]"""
+    """Returns dict: peer_id, height, my_port, rpc_port, support_flags, pruning_seed, peers[list of (kind, ip, port, last_seen, id)]
+    last_seen is None when the field is absent (stock monerod omits it; a sent 0 is not stock)."""
     body = encode({
         'node_data': {
             'network_id': NETWORK_ID,
@@ -141,7 +142,7 @@ def handshake(host, port, timeout=10):
     peers = []
     for e in d.get('local_peerlist_new', []) or []:
         kind, ip, p = fmt_addr(e.get('adr', {}))
-        peers.append((kind, ip, p, e.get('last_seen', 0), '%016x' % e.get('id', 0), e.get('rpc_port', 0), e.get('pruning_seed', 0)))
+        peers.append((kind, ip, p, e.get('last_seen'), '%016x' % e.get('id', 0), e.get('rpc_port', 0), e.get('pruning_seed', 0)))
     return dict(peer_id='%016x' % nd.get('peer_id', 0), my_port=nd.get('my_port'), rpc_port=nd.get('rpc_port', 0),
                 support_flags=nd.get('support_flags', 0), height=pd.get('current_height'),
                 top_version=pd.get('top_version'), pruning_seed=pd.get('pruning_seed', 0), peers=peers)
