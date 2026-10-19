@@ -26,10 +26,33 @@ so a single machine is enough and no monerod is needed. Daily counts are on the
 
 ## Run
 
+Python 3 only (standard library); `ruckcap.sh` also needs `tcpdump` and sudo.
+
+### Check a capture you were sent
+
+A capture bundle has `pcapng/<vantage>/<vantage>.pcapng`, `probe/<vantage>/probe.jsonl.gz` and these scripts.
+
+```
+mkdir capture && tar -xJf monero-handshake-capture-YYYYMMDD.tar.xz -C capture && cd capture
+
+# 1. hits from the parsed probe data
+python3 scripts/hits.py probe/*/probe.jsonl.gz > my_hits.json
+python3 -c "import json; s=json.load(open('my_hits.json'))['S1']; print(len(s['any_vantage']), 'IPs send last_seen;', len(s['consistent']), 'on every answer')"
+
+# 2. same, but rebuild the probe data from the pcaps first (no trust in the parsed files)
+for b in pcapng/*/; do b=$(basename $b); python3 scripts/pcap2probe.py pcapng/$b/$b.pcapng probe/$b/probe.jsonl && gzip -f probe/$b/probe.jsonl; done
+python3 scripts/hits.py probe/*/probe.jsonl.gz > my_hits.json
+```
+
+`my_hits.json`: per vantage `S1` / `S3` lists, plus `S1` and `S3` across vantages (`any_vantage`, `consistent` = hit on
+every answer that IP gave, `hits_answers` = [hits, answers] per IP).
+
+### Make your own capture
+
 Targets are `ip port` lines, e.g. from `get_peer_list` on your own node or any crawl.
 
 ```
-./ruckcap.sh <name> [workers]        # needs tcpdump (sudo) and python3; writes <name>.pcap.gz, probe.jsonl.gz
+./ruckcap.sh <name> [workers]        # writes <name>.pcap.gz, probe.jsonl.gz
 python3 hits.py */probe.jsonl.gz > hits.json
 ```
 
@@ -37,4 +60,6 @@ Without a capture: `python3 ffprobe.py targets.txt probe.jsonl 48`.
 
 The pcaps contain only the probe's handshakes, so the signals in the paper that need held or inbound connections
 (throttled timed sync, ping flooding, short-lived connections) do not apply to them. To read them with the
-authors' tool, convert with `editcap -F pcapng` and lay them out as `data/pcapng/<name>/`.
+authors' tool, lay them out as `data/pcapng/<name>/<name>.pcapng` (pcap files: `editcap -F pcapng` first).
+As of its commit 0bec011 the tool needs a patch to see `last_seen` (it does not extract int64 values) and to run
+without LaTeX: see [issue #1](https://github.com/ykpyck/monero-traffic-analysis/issues/1).
